@@ -1,0 +1,24 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+  namespace: {{ .Values.namespace }}
+spec:
+  version: {{ .Values.version }}
+  count: {{ .Values.kibana.count }}
+  elasticsearchRef:
+    name: elasticsearch
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  config:
+    server.publicBaseUrl: "https://{{ .Values.kibana.ingress.host }}"
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        {{- with .Values.kibana.resources }}
+        resources:
+        {{- toYaml . | nindent 12 }}
+        {{- end }}
