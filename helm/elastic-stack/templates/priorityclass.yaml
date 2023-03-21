@@ -1,0 +1,8 @@
+apiVersion: scheduling.k8s.io/v1
+description: Used for filebeat critical pods that must not be moved from their current
+kind: PriorityClass
+metadata:
+  name: filebeat-pod-critical
+globalDefault: false
+preemptionPolicy: PreemptLowerPriority
+value: 1000000000

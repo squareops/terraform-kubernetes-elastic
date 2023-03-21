@@ -1,0 +1,153 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch
+  namespace: {{ .Values.namespace }}
+spec:
+  version: {{ .Values.version }}
+  volumeClaimDeletePolicy: DeleteOnScaledownAndClusterDeletion
+  nodeSets:
+  - name: master
+    count: {{ .Values.master.count }}
+    podTemplate:
+      spec:
+        serviceAccountName: sa-elastic
+        containers:
+        - name: elasticsearch
+          {{- with .Values.master.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: ES_JAVA_OPTS
+              value: {{ .Values.ES_JAVA_OPTS }}
+        initContainers:
+        - name: install-plugins
+          command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-s3
+      {{- with .Values.affinity }}
+        affinity:
+          {{- toYaml . | nindent 10 }}
+           {{- end }}
+        topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            elasticsearch.k8s.elastic.co/node-master: true
+    config:
+      node.roles: ["master"]
+      node.store.allow_mmap: false
+      xpack.monitoring.collection.enabled: true
+      cluster.routing.rebalance.enable: all
+      cluster.routing.allocation.allow_rebalance: always
+      cluster.routing.allocation.cluster_concurrent_rebalance: 2
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data # Do not change this name unless you set up a volume mount for the data path.
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.master.volume_size }}
+        storageClassName: {{ .Values.master.storageClassName }}
+  - name: hot-node
+    count: {{ .Values.worker.data_hot.count }}
+    podTemplate:
+      spec:
+        serviceAccountName: sa-elastic
+        containers:
+        - name: elasticsearch
+          {{- with .Values.worker.data_hot.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: ES_JAVA_OPTS
+              value: {{ .Values.ES_JAVA_OPTS }}
+        initContainers:
+        - name: install-plugins
+          command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-s3
+      {{- with .Values.affinity }}
+        affinity:
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+        topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            elasticsearch.k8s.elastic.co/node-data_hot: true
+    config:
+      node.roles: ["data","data_hot"]
+      node.store.allow_mmap: false
+      xpack.monitoring.collection.enabled: true
+      cluster.routing.rebalance.enable: all
+      cluster.routing.allocation.allow_rebalance: always
+      cluster.routing.allocation.cluster_concurrent_rebalance: 2
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.worker.data_hot.volume_size }}
+        storageClassName: {{ .Values.worker.data_hot.storageClassName  }}
+  - name: warm-node
+    count: {{ .Values.worker.data_warm.count }}
+    podTemplate:
+      spec:
+        serviceAccountName: sa-elastic
+        containers:
+        - name: elasticsearch
+          {{- with .Values.worker.data_warm.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: ES_JAVA_OPTS
+              value: {{ .Values.ES_JAVA_OPTS }}
+        initContainers:
+        - name: install-plugins
+          command:
+          - sh
+          - -c
+          - |
+            bin/elasticsearch-plugin install --batch repository-s3
+      {{- with .Values.affinity }}
+        affinity:
+          {{- toYaml . | nindent 10 }}
+           {{- end }}
+        topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            elasticsearch.k8s.elastic.co/node-data_warm: true
+    config:
+      node.roles: ["data","data_warm","ingest"]
+      node.store.allow_mmap: false
+      xpack.monitoring.collection.enabled: true
+      cluster.routing.rebalance.enable: all
+      cluster.routing.allocation.allow_rebalance: always
+      cluster.routing.allocation.cluster_concurrent_rebalance: 2
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.worker.data_warm.volume_size }}
+        storageClassName: {{ .Values.worker.data_warm.storageClassName }}

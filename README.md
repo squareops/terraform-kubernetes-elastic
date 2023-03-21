@@ -1,92 +1,154 @@
-# Elastic Cloud Kubernetes
+## Elastic Cloud Kubernetes
+![squareops_avatar]
 
+[squareops_avatar]: https://squareops.com/wp-content/uploads/2022/12/squareops-logo.png
 
+### [SquareOps Technologies](https://squareops.com/) Your DevOps Partner for Accelerating cloud journey.
+<br>
 
-## Getting started
+This Eck module is a Kubernetes operator for Elasticsearch and Kibana that simplifies the deployment, management, and scaling of Elasticsearch and Kibana clusters in Kubernetes environments. The Eck module allows you to easily create and configure Elasticsearch and Kibana clusters, and provides customization options such as persistent volume claim templates and storage classes. Additionally, the Eck module provides security features such as encryption and authentication for Elasticsearch and Kibana clusters. With the Eck module, you can manage Elasticsearch and Kibana clusters in a scalable and efficient manner, while also ensuring the security of your data.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Important Notes:
+This module is compatible with EKS version 1.23, which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Usage Example
 
-## Add your files
+```hcl
+module "eck" {
+  source       = "../../"
+  cluster_name = "cluster-name"
+  eck_config = {
+    hostname             = "eck.squareops.in"
+    master_node_sc       = "gp2"
+    data_hot_node_sc     = "gp2"
+    data_warm_node_sc    = "gp2"
+    kibana_node_count    = 1
+    master_node_count    = 1
+    data_hot_node_count  = 2
+    data_warm_node_count = 2
+    master_node_size     = "20Gi"
+    data_hot_node_size   = "50Gi"
+    data_warm_node_size  = "50Gi"
+    eck_values           = file("./helm/eck.yaml")
+    karpenter_enabled    = true
+    karpenter_config = {
+      private_subnet_name                  = "private-subnet-name"
+      karpenter_ec2_capacity_type          = ["spot"]
+      excluded_karpenter_ec2_instance_type = ["nano", "micro", "small"]
+      karpenter_eck_values                 = file("./helm/karpenter.yaml")
+    }
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+  }
+
+  elastalert_enabled = true
+  elastalert_config = {
+    slack_webhook_url = ""
+    elastalert_values = file("./helm/elastAlert.yaml")
+  }
+}
+
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/sq-ia/kubernetes/eck.git
-git branch -M main
-git push -uf origin main
-```
+Refer [examples](https://github.com/sq-ia/terraform-kubernetes-eck/tree/main/examples/complete) for more details.
 
-## Integrate with your tools
+## IAM Permissions
+The required IAM permissions to create resources from this module can be found [here](https://github.com/sq-ia/terraform-kubernetes-eck/blob/main/IAM.md)
 
-- [ ] [Set up project integrations](https://gitlab.com/sq-ia/kubernetes/eck/-/settings/integrations)
+## Elast Alert
 
-## Collaborate with your team
+Elastic Alert is an open-source tool that enables real-time monitoring and detection of changes in Elasticsearch data. It is designed to work with Elasticsearch clusters and is part of the Elastic Stack. Elastic Alert allows you to define rules and thresholds to trigger alerts based on specific conditions in your Elasticsearch data.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Using Elastic Alert, you can monitor your Elasticsearch data in real-time and receive alerts when certain conditions are met. For example, you might use Elastic Alert to monitor your application logs for a certain number of errors in a given time period or to monitor for changes in system performance.
 
-## Test and Deploy
+Elastic Alert is highly configurable and can be customized to meet a wide range of monitoring use cases. It includes support for various alerting channels, such as email, Slack, PagerDuty, and more. Additionally, Elastic Alert can be extended with custom actions, allowing you to execute custom scripts or webhook integrations when alerts are triggered.
 
-Use the built-in continuous integration in GitLab.
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+No requirements.
 
-***
+## Providers
 
-# Editing this README
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | n/a |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
+| <a name="provider_time"></a> [time](#provider\_time) | n/a |
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## Modules
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+No modules.
 
-## Name
-Choose a self-explaining name for your project.
+## Resources
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+| Name | Type |
+|------|------|
+| [aws_iam_role.eck_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [helm_release.eck_operator](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.elastalert](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.elastic_stack](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.karpenter_provisioner](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [kubernetes_namespace.elastic_system](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
+| [time_sleep.wait_60_sec](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_eks_cluster.kubernetes_cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
+| [kubernetes_secret.eck_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/data-sources/secret) | data source |
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Inputs
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | value | `string` | `"2.9.0"` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster | `string` | `"stg-msa-reff"` | no |
+| <a name="input_eck_config"></a> [eck\_config](#input\_eck\_config) | ECK configurations | `any` | <pre>{<br>  "data_hot_node_count": 1,<br>  "data_hot_node_sc": "gp2",<br>  "data_hot_node_size": "20Gi",<br>  "data_warm_node_count": 1,<br>  "data_warm_node_sc": "gp2",<br>  "data_warm_node_size": "20Gi",<br>  "hostname": "",<br>  "karpenter_config": {<br>    "excluded_karpenter_ec2_instance_type": [<br>      ""<br>    ],<br>    "karpenter_ec2_capacity_type": [<br>      ""<br>    ],<br>    "karpenter_eck_values": "",<br>    "sg_selector_name": "",<br>    "subnet_selector_name": ""<br>  },<br>  "karpenter_enabled": "",<br>  "kibana_node_count": 1,<br>  "master_node_count": 1,<br>  "master_node_sc": "gp2",<br>  "master_node_size": "10Gi"<br>}</pre> | no |
+| <a name="input_eck_version"></a> [eck\_version](#input\_eck\_version) | Enter eck version | `string` | `"7.17.3"` | no |
+| <a name="input_elastalert_config"></a> [elastalert\_config](#input\_elastalert\_config) | Elastalert configurations | `map(any)` | <pre>{<br>  "elastalert_values": "",<br>  "slack_webhook_url": ""<br>}</pre> | no |
+| <a name="input_elastalert_enabled"></a> [elastalert\_enabled](#input\_elastalert\_enabled) | Set true to deploy elastalert for eck stack | `bool` | `false` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Enter namespace name | `string` | `"elastic-system"` | no |
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Outputs
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+| Name | Description |
+|------|-------------|
+| <a name="output_eck_password"></a> [eck\_password](#output\_eck\_password) | ECK Password |
+| <a name="output_eck_username"></a> [eck\_username](#output\_eck\_username) | ECK Username |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Contribution & Issue Reporting
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+To report an issue with a project:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+  1. Check the repository's [issue tracker](https://github.com/sq-ia/terraform-kubernetes-eck/issues) on GitHub
+  2. Search to see if the issue has already been reported
+  3. If you can't find an answer to your question in the documentation or issue tracker, you can ask a question by creating a new issue. Be sure to provide enough context and details so others can understand your problem.
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Apache License, Version 2.0, January 2004 (http://www.apache.org/licenses/).
+
+## Support Us
+
+To support a GitHub project by liking it, you can follow these steps:
+
+  1. Visit the repository: Navigate to the [GitHub repository](https://github.com/sq-ia/terraform-kubernetes-eck).
+
+  2. Click the "Star" button: On the repository page, you'll see a "Star" button in the upper right corner. Clicking on it will star the repository, indicating your support for the project.
+
+  3. Optionally, you can also leave a comment on the repository or open an issue to give feedback or suggest changes.
+
+Starring a repository on GitHub is a simple way to show your support and appreciation for the project. It also helps to increase the visibility of the project and make it more discoverable to others.
+
+## Who we are
+
+We believe that the key to success in the digital age is the ability to deliver value quickly and reliably. That’s why we offer a comprehensive range of DevOps & Cloud services designed to help your organization optimize its systems & Processes for speed and agility.
+
+  1. We are an AWS Advanced consulting partner which reflects our deep expertise in AWS Cloud and helping 100+ clients over the last 5 years.
+  2. Expertise in Kubernetes and overall container solution helps companies expedite their journey by 10X.
+  3. Infrastructure Automation is a key component to the success of our Clients and our Expertise helps deliver the same in the shortest time.
+  4. DevSecOps as a service to implement security within the overall DevOps process and helping companies deploy securely and at speed.
+  5. Platform engineering which supports scalable,Cost efficient infrastructure that supports rapid development, testing, and deployment.
+  6. 24*7 SRE service to help you Monitor the state of your infrastructure and eradicate any issue within the SLA.
+
+We provide [support](https://squareops.com/contact-us/) on all of our projects, no matter how small or large they may be.
+
+To find more information about our company, visit [squareops.com](https://squareops.com/), follow us on [Linkedin](https://www.linkedin.com/company/squareops-technologies-pvt-ltd/), or fill out a [job application](https://squareops.com/careers/). If you have any questions or would like assistance with your cloud strategy and implementation, please don't hesitate to [contact us](https://squareops.com/contact-us/).
