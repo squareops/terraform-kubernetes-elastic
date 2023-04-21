@@ -1,4 +1,4 @@
-rules: 
+rules:
   slack_alert: |-
     ---
     name: elast_alert
@@ -7,10 +7,10 @@ rules:
     num_events: 5
     timeframe:
       minutes: 5
-    filter:  
+    filter:
     - query:
         query_string:
-          query: "http.response.status_code : 404"       
+          query: "http.response.status_code : 404"
     alert:
     - "slack"
     slack:

@@ -38,6 +38,5 @@ No inputs.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_eck_password"></a> [eck\_password](#output\_eck\_password) | ECK Password |
-| <a name="output_eck_username"></a> [eck\_username](#output\_eck\_username) | ECK Username |
+| <a name="output_eck_credentials"></a> [eck\_credentials](#output\_eck\_credentials) | eck\_Info |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

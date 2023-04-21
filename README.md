@@ -101,7 +101,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | value | `string` | `"2.9.0"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster | `string` | `"stg-msa-reff"` | no |
-| <a name="input_eck_config"></a> [eck\_config](#input\_eck\_config) | ECK configurations | `any` | <pre>{<br>  "data_hot_node_count": 1,<br>  "data_hot_node_sc": "gp2",<br>  "data_hot_node_size": "20Gi",<br>  "data_warm_node_count": 1,<br>  "data_warm_node_sc": "gp2",<br>  "data_warm_node_size": "20Gi",<br>  "hostname": "",<br>  "karpenter_config": {<br>    "excluded_karpenter_ec2_instance_type": [<br>      ""<br>    ],<br>    "karpenter_ec2_capacity_type": [<br>      ""<br>    ],<br>    "karpenter_eck_values": "",<br>    "sg_selector_name": "",<br>    "subnet_selector_name": ""<br>  },<br>  "karpenter_enabled": "",<br>  "kibana_node_count": 1,<br>  "master_node_count": 1,<br>  "master_node_sc": "gp2",<br>  "master_node_size": "10Gi"<br>}</pre> | no |
+| <a name="input_eck_config"></a> [eck\_config](#input\_eck\_config) | ECK configurations | `any` | <pre>{<br>  "data_hot_node_count": 1,<br>  "data_hot_node_sc": "gp2",<br>  "data_hot_node_size": "20Gi",<br>  "data_warm_node_count": 1,<br>  "data_warm_node_sc": "gp2",<br>  "data_warm_node_size": "20Gi",<br>  "eck_values": "",<br>  "hostname": "",<br>  "karpenter_config": {<br>    "excluded_instance_type": [<br>      "nano",<br>      "micro",<br>      "small"<br>    ],<br>    "instance_capacity_type": [<br>      "spot"<br>    ],<br>    "karpenter_eck_values": "",<br>    "private_subnet_name": ""<br>  },<br>  "karpenter_enabled": "",<br>  "kibana_node_count": 1,<br>  "master_node_count": 1,<br>  "master_node_sc": "gp2",<br>  "master_node_size": "10Gi"<br>}</pre> | no |
 | <a name="input_eck_version"></a> [eck\_version](#input\_eck\_version) | Enter eck version | `string` | `"7.17.3"` | no |
 | <a name="input_elastalert_config"></a> [elastalert\_config](#input\_elastalert\_config) | Elastalert configurations | `map(any)` | <pre>{<br>  "elastalert_values": "",<br>  "slack_webhook_url": ""<br>}</pre> | no |
 | <a name="input_elastalert_enabled"></a> [elastalert\_enabled](#input\_elastalert\_enabled) | Set true to deploy elastalert for eck stack | `bool` | `false` | no |
@@ -111,8 +111,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_eck_password"></a> [eck\_password](#output\_eck\_password) | ECK Password |
-| <a name="output_eck_username"></a> [eck\_username](#output\_eck\_username) | ECK Username |
+| <a name="output_eck"></a> [eck](#output\_eck) | ECK\_Info |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Contribution & Issue Reporting
 

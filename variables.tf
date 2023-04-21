@@ -13,12 +13,12 @@ variable "eck_config" {
     data_hot_node_size   = "20Gi"
     data_warm_node_size  = "20Gi"
     karpenter_enabled    = ""
+    eck_values           = ""
     karpenter_config = {
-      subnet_selector_name                 = ""
-      sg_selector_name                     = ""
-      karpenter_ec2_capacity_type          = [""]
-      excluded_karpenter_ec2_instance_type = [""]
-      karpenter_eck_values                 = ""
+      private_subnet_name    = ""
+      instance_capacity_type = ["spot"]
+      excluded_instance_type = ["nano", "micro", "small"]
+      karpenter_eck_values   = ""
     }
   }
   description = "ECK configurations"
