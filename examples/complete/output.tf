@@ -1,9 +1,4 @@
-output "eck_username" {
-  description = "ECK Username"
-  value       = module.eck.eck_username
-}
-
-output "eck_password" {
-  description = "ECK Password"
-  value       = module.eck.eck_password
+output "eck_credentials" {
+  description = "eck_Info"
+  value       = module.eck.eck
 }
