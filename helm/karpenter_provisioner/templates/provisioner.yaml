@@ -5,6 +5,7 @@ metadata:
 spec:
   labels:
     ECK-Services: "true"
+    eks.amazonaws.com/nodegroup: "eck-ng"
   requirements:
     - key: karpenter.sh/capacity-type         # optional, set to on-demand by default, spot if both are listed
       operator: In
