@@ -6,7 +6,7 @@
 ### [SquareOps Technologies](https://squareops.com/) Your DevOps Partner for Accelerating cloud journey.
 <br>
 
-This Eck module is a Kubernetes operator for Elasticsearch and Kibana that simplifies the deployment, management, and scaling of Elasticsearch and Kibana clusters in Kubernetes environments. The Eck module allows you to easily create and configure Elasticsearch and Kibana clusters, and provides customization options such as persistent volume claim templates and storage classes. Additionally, the Eck module provides security features such as encryption and authentication for Elasticsearch and Kibana clusters. With the Eck module, you can manage Elasticsearch and Kibana clusters in a scalable and efficient manner, while also ensuring the security of your data.
+This ECK module is a Kubernetes operator for Elasticsearch and Kibana that simplifies the deployment, management, and scaling of Elasticsearch and Kibana clusters in Kubernetes environments. The ECK module allows you to easily create and configure Elasticsearch and Kibana clusters, and provides customization options such as persistent volume claim templates and storage classes. Additionally, the ECK module provides security features such as encryption and authentication for Elasticsearch and Kibana clusters. With the ECK module, you can manage Elasticsearch and Kibana clusters in a scalable and efficient manner, while also ensuring the security of your data.
 
 ## Important Notes:
 This module is compatible with EKS version 1.23, which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
@@ -56,11 +56,11 @@ The required IAM permissions to create resources from this module can be found [
 
 ## Elast Alert
 
-Elastic Alert is an open-source tool that enables real-time monitoring and detection of changes in Elasticsearch data. It is designed to work with Elasticsearch clusters and is part of the Elastic Stack. Elastic Alert allows you to define rules and thresholds to trigger alerts based on specific conditions in your Elasticsearch data.
+Elast Alert is an open-source tool that enables real-time monitoring and detection of changes in Elasticsearch data. It is designed to work with Elasticsearch clusters and is part of the Elastic Stack. Elast Alert allows you to define rules and thresholds to trigger alerts based on specific conditions in your Elasticsearch data.
 
-Using Elastic Alert, you can monitor your Elasticsearch data in real-time and receive alerts when certain conditions are met. For example, you might use Elastic Alert to monitor your application logs for a certain number of errors in a given time period or to monitor for changes in system performance.
+Using Elast Alert, you can monitor your Elasticsearch data in real-time and receive alerts when certain conditions are met. For example, you might use Elast Alert to monitor your application logs for a certain number of errors in a given time period or to monitor for changes in system performance.
 
-Elastic Alert is highly configurable and can be customized to meet a wide range of monitoring use cases. It includes support for various alerting channels, such as email, Slack, PagerDuty, and more. Additionally, Elastic Alert can be extended with custom actions, allowing you to execute custom scripts or webhook integrations when alerts are triggered.
+Elast Alert is highly configurable and can be customized to meet a wide range of monitoring use cases. It includes support for various alerting channels, such as email, Slack, PagerDuty, and more. Additionally, Elast Alert can be extended with custom actions, allowing you to execute custom scripts or webhook integrations when alerts are triggered.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
