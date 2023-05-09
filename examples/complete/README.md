@@ -6,6 +6,16 @@
 ### [SquareOps Technologies](https://squareops.com/) Your DevOps Partner for Accelerating cloud journey.
 <br>
 This example will be very useful for users who are new to a module and want to quickly learn how to use it. By reviewing the examples, users can gain a better understanding of how the module works, what features it supports, and how to customize it to their specific needs.
+
+## Supported Versions Table:
+
+| Resources              |  Helm Chart Version                |     K8s supported version   |      
+| :-----:               | :---                               |         :---                | 
+| Elastic-Operator      | **2.7.0**                          |    1.23,1.24,1.25           |
+| ECK                   | **7.17.3**                         |    1.23,1.24,1.25           |
+| Elastalert2           | **2.9.0**                          |    1.23,1.24,1.25           |
+
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
