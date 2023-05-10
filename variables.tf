@@ -21,11 +21,11 @@ variable "eck_config" {
       karpenter_eck_values   = ""
     }
   }
-  description = "ECK configurations"
+  description = "Elastic Stack configurations"
 }
 
-variable "eck_version" {
-  description = "Enter eck version"
+variable "elastic_stack_version" {
+  description = "Elastic Stack version"
   type        = string
   default     = "7.17.3"
 }
@@ -38,7 +38,7 @@ variable "elastalert_config" {
   description = "Elastalert configurations"
 }
 
-variable "chart_version" {
+variable "elastalert_chart_version" {
   description = "value"
   default     = "2.9.0"
   type        = string
@@ -47,7 +47,7 @@ variable "chart_version" {
 variable "elastalert_enabled" {
   default     = false
   type        = bool
-  description = "Set true to deploy elastalert for eck stack"
+  description = "Set true to deploy elastalert for ECK Stack"
 }
 
 variable "cluster_name" {
@@ -57,7 +57,7 @@ variable "cluster_name" {
 }
 
 variable "namespace" {
-  description = "Enter namespace name"
+  description = "Namespace in which Elastic Stack will be deployed"
   type        = string
   default     = "elastic-system"
 }

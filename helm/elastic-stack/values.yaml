@@ -1,4 +1,4 @@
-version: ${eck_version}
+version: ${elastic_stack_version}
 namespace: ${namespace}
 
 kibana:

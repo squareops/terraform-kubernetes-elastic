@@ -1,8 +1,5 @@
 locals {
-  region      = "us-east-2"
-  name        = "skaf"
-  environment = "prod"
-
+  region = "us-east-2"
 }
 
 module "eck" {

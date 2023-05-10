@@ -41,7 +41,7 @@ resource "helm_release" "elastic_stack" {
 
   values = [
     templatefile("${path.module}/helm/elastic-stack/values.yaml", {
-      eck_version             = "${var.eck_version}"
+      elastic_stack_version   = "${var.elastic_stack_version}"
       namespace               = "${var.namespace}"
       hostname                = "${var.eck_config.hostname}"
       es_master_node_size     = "${var.eck_config.master_node_size}"
@@ -69,7 +69,7 @@ resource "helm_release" "elastalert" {
   name       = "elastalert"
   chart      = "elastalert2"
   timeout    = 600
-  version    = var.chart_version
+  version    = var.elastalert_chart_version
   namespace  = var.namespace
   repository = "https://jertel.github.io/elastalert2/"
   values = [
