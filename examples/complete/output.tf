@@ -1,4 +1,4 @@
 output "eck_credentials" {
-  description = "eck_Info"
+  description = "ECK_Info"
   value       = module.eck.eck
 }

@@ -12,8 +12,6 @@ data "aws_eks_cluster" "kubernetes_cluster" {
   name = var.cluster_name
 }
 
-
-
 resource "kubernetes_namespace" "elastic_system" {
   metadata {
     annotations = {}
@@ -26,10 +24,10 @@ resource "helm_release" "eck_operator" {
     kubernetes_namespace.elastic_system
   ]
   name       = "elastic-operator"
-  repository = "https://helm.elastic.co"
   chart      = "eck-operator"
-  namespace  = var.namespace
   timeout    = 600
+  namespace  = var.namespace
+  repository = "https://helm.elastic.co"
 }
 
 

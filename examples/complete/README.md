@@ -21,7 +21,7 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_eck"></a> [eck](#module\_eck) | ../../ | n/a |
+| <a name="module_eck"></a> [eck](#module\_eck) | https://github.com/sq-ia/terraform-kubernetes-elastic.git | n/a |
 
 ## Resources
 
@@ -38,5 +38,5 @@ No inputs.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_eck_credentials"></a> [eck\_credentials](#output\_eck\_credentials) | eck\_Info |
+| <a name="output_eck_credentials"></a> [eck\_credentials](#output\_eck\_credentials) | ECK\_Info |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

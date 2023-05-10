@@ -21,13 +21,13 @@ variable "eck_config" {
       karpenter_eck_values   = ""
     }
   }
-  description = "ECK configurations"
+  description = "Configurations for deploying the Elastic Cloud on Kubernetes (ECK) stack. "
 }
 
 variable "eck_version" {
-  description = "Enter eck version"
   type        = string
   default     = "7.17.3"
+  description = "Version of ECK to be deployed on Kubernetes."
 }
 variable "elastalert_config" {
   type = map(any)
@@ -35,29 +35,29 @@ variable "elastalert_config" {
     slack_webhook_url = ""
     elastalert_values = ""
   }
-  description = "Elastalert configurations"
+  description = "Configurations for deploying the Elastalert tool, which is an alerting system for Elasticsearch."
 }
 
 variable "chart_version" {
-  description = "value"
-  default     = "2.9.0"
   type        = string
-
+  default     = "2.9.0"
+  description = "Version of Helm chart to be used for deploying the ECK stack."
 }
 variable "elastalert_enabled" {
-  default     = false
   type        = bool
-  description = "Set true to deploy elastalert for eck stack"
+  default     = false
+  description = "Whether the Elastalert tool should be deployed along with the ECK stack or not. "
 }
 
 variable "cluster_name" {
   type        = string
-  description = "Name of the EKS cluster"
-  default     = "stg-msa-reff"
+  default     = ""
+  description = "Name of the EKS cluster to which the ECK stack should be deployed."
+
 }
 
 variable "namespace" {
-  description = "Enter namespace name"
   type        = string
   default     = "elastic-system"
+  description = "Name of the Kubernetes namespace where the ECK deployment will be deployed."
 }
