@@ -6,44 +6,52 @@
 ### [SquareOps Technologies](https://squareops.com/) Your DevOps Partner for Accelerating cloud journey.
 <br>
 
-This Eck module is a Kubernetes operator for Elasticsearch and Kibana that simplifies the deployment, management, and scaling of Elasticsearch and Kibana clusters in Kubernetes environments. The Eck module allows you to easily create and configure Elasticsearch and Kibana clusters, and provides customization options such as persistent volume claim templates and storage classes. Additionally, the Eck module provides security features such as encryption and authentication for Elasticsearch and Kibana clusters. With the Eck module, you can manage Elasticsearch and Kibana clusters in a scalable and efficient manner, while also ensuring the security of your data.
+This ECK module is a Kubernetes operator for Elasticsearch and Kibana that simplifies the deployment, management, and scaling of Elasticsearch and Kibana clusters in Kubernetes environments. The ECK module allows you to easily create and configure Elasticsearch and Kibana clusters, and provides customization options such as persistent volume claim templates and storage classes. Additionally, the ECK module provides security features such as encryption and authentication for Elasticsearch and Kibana clusters. With the ECK module, you can manage Elasticsearch and Kibana clusters in a scalable and efficient manner, while also ensuring the security of your data.
 
 ## Important Notes:
-This module is compatible with EKS version 1.23, which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
+This module is compatible with EKS version 1.23 which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
+
+## Supported Versions Table:
+
+| Resources              |  Helm Chart Version                |     K8s supported version   |  
+| :-----:               | :---                               |         :---                |
+| Elastic-Operator      | **2.7.0**                          |    **1.23**           |
+| ECK                   | **7.17.3**                         |    **1.23**           |
+| Elastalert2           | **2.9.0**                          |    **1.23**           |
+
 
 ## Usage Example
 
 ```hcl
 module "eck" {
-  source       = "../../"
-  cluster_name = "cluster-name"
+  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  cluster_name = "dev-cluster"
   eck_config = {
-    hostname             = "eck.squareops.in"
+    hostname          = "eck.squareops.in"
+    eck_values        = ""
+    karpenter_enabled = true
+    karpenter_config = {
+      private_subnet_name    = "private-subnet-name"
+      instance_capacity_type = ["spot"]
+      excluded_instance_type = ["nano", "micro", "small"]
+      karpenter_eck_values   = ""
+    }
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
+    master_node_size     = "20Gi"
+    data_hot_node_size   = "50Gi"
+    data_warm_node_size  = "50Gi"
     kibana_node_count    = 1
     master_node_count    = 1
     data_hot_node_count  = 2
     data_warm_node_count = 2
-    master_node_size     = "20Gi"
-    data_hot_node_size   = "50Gi"
-    data_warm_node_size  = "50Gi"
-    eck_values           = file("./helm/eck.yaml")
-    karpenter_enabled    = true
-    karpenter_config = {
-      private_subnet_name                  = "private-subnet-name"
-      karpenter_ec2_capacity_type          = ["spot"]
-      excluded_karpenter_ec2_instance_type = ["nano", "micro", "small"]
-      karpenter_eck_values                 = file("./helm/karpenter.yaml")
-    }
-
   }
 
-  elastalert_enabled = true
+  elastalert_enabled = false
   elastalert_config = {
     slack_webhook_url = ""
-    elastalert_values = file("./helm/elastAlert.yaml")
+    elastalert_values = ""
   }
 }
 
@@ -58,9 +66,9 @@ The required IAM permissions to create resources from this module can be found [
 
 Elastic Alert is an open-source tool that enables real-time monitoring and detection of changes in Elasticsearch data. It is designed to work with Elasticsearch clusters and is part of the Elastic Stack. Elastic Alert allows you to define rules and thresholds to trigger alerts based on specific conditions in your Elasticsearch data.
 
-Using Elastic Alert, you can monitor your Elasticsearch data in real-time and receive alerts when certain conditions are met. For example, you might use Elastic Alert to monitor your application logs for a certain number of errors in a given time period or to monitor for changes in system performance.
+Using Elast Alert, you can monitor your Elasticsearch data in real-time and receive alerts when certain conditions are met. For example, you might use Elast Alert to monitor your application logs for a certain number of errors in a given time period or to monitor for changes in system performance.
 
-Elastic Alert is highly configurable and can be customized to meet a wide range of monitoring use cases. It includes support for various alerting channels, such as email, Slack, PagerDuty, and more. Additionally, Elastic Alert can be extended with custom actions, allowing you to execute custom scripts or webhook integrations when alerts are triggered.
+Elast Alert is highly configurable and can be customized to meet a wide range of monitoring use cases. It includes support for various alerting channels, such as email, Slack, PagerDuty, and more. Additionally, Elast Alert can be extended with custom actions, allowing you to execute custom scripts or webhook integrations when alerts are triggered.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -99,13 +107,13 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | value | `string` | `"2.9.0"` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster | `string` | `"stg-msa-reff"` | no |
-| <a name="input_eck_config"></a> [eck\_config](#input\_eck\_config) | ECK configurations | `any` | <pre>{<br>  "data_hot_node_count": 1,<br>  "data_hot_node_sc": "gp2",<br>  "data_hot_node_size": "20Gi",<br>  "data_warm_node_count": 1,<br>  "data_warm_node_sc": "gp2",<br>  "data_warm_node_size": "20Gi",<br>  "eck_values": "",<br>  "hostname": "",<br>  "karpenter_config": {<br>    "excluded_instance_type": [<br>      "nano",<br>      "micro",<br>      "small"<br>    ],<br>    "instance_capacity_type": [<br>      "spot"<br>    ],<br>    "karpenter_eck_values": "",<br>    "private_subnet_name": ""<br>  },<br>  "karpenter_enabled": "",<br>  "kibana_node_count": 1,<br>  "master_node_count": 1,<br>  "master_node_sc": "gp2",<br>  "master_node_size": "10Gi"<br>}</pre> | no |
-| <a name="input_eck_version"></a> [eck\_version](#input\_eck\_version) | Enter eck version | `string` | `"7.17.3"` | no |
-| <a name="input_elastalert_config"></a> [elastalert\_config](#input\_elastalert\_config) | Elastalert configurations | `map(any)` | <pre>{<br>  "elastalert_values": "",<br>  "slack_webhook_url": ""<br>}</pre> | no |
-| <a name="input_elastalert_enabled"></a> [elastalert\_enabled](#input\_elastalert\_enabled) | Set true to deploy elastalert for eck stack | `bool` | `false` | no |
-| <a name="input_namespace"></a> [namespace](#input\_namespace) | Enter namespace name | `string` | `"elastic-system"` | no |
+| <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of Helm chart to be used for deploying the ECK stack. | `string` | `"2.9.0"` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster to which the ECK stack should be deployed. | `string` | `""` | no |
+| <a name="input_eck_config"></a> [eck\_config](#input\_eck\_config) | Configurations for deploying the Elastic Cloud on Kubernetes (ECK) stack. | `any` | <pre>{<br>  "data_hot_node_count": 1,<br>  "data_hot_node_sc": "gp2",<br>  "data_hot_node_size": "20Gi",<br>  "data_warm_node_count": 1,<br>  "data_warm_node_sc": "gp2",<br>  "data_warm_node_size": "20Gi",<br>  "eck_values": "",<br>  "hostname": "",<br>  "karpenter_config": {<br>    "excluded_instance_type": [<br>      "nano",<br>      "micro",<br>      "small"<br>    ],<br>    "instance_capacity_type": [<br>      "spot"<br>    ],<br>    "karpenter_eck_values": "",<br>    "private_subnet_name": ""<br>  },<br>  "karpenter_enabled": "",<br>  "kibana_node_count": 1,<br>  "master_node_count": 1,<br>  "master_node_sc": "gp2",<br>  "master_node_size": "10Gi"<br>}</pre> | no |
+| <a name="input_eck_version"></a> [eck\_version](#input\_eck\_version) | Version of ECK to be deployed on Kubernetes. | `string` | `"7.17.3"` | no |
+| <a name="input_elastalert_config"></a> [elastalert\_config](#input\_elastalert\_config) | Configurations for deploying the Elastalert tool, which is an alerting system for Elasticsearch. | `map(any)` | <pre>{<br>  "elastalert_values": "",<br>  "slack_webhook_url": ""<br>}</pre> | no |
+| <a name="input_elastalert_enabled"></a> [elastalert\_enabled](#input\_elastalert\_enabled) | Whether the Elastalert tool should be deployed along with the ECK stack or not. | `bool` | `false` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Name of the Kubernetes namespace where the ECK deployment will be deployed. | `string` | `"elastic-system"` | no |
 
 ## Outputs
 

@@ -1,19 +1,23 @@
 locals {
+  name        = "elastic"
   region      = "us-east-2"
-  name        = "skaf"
   environment = "prod"
-
+  additional_tags = {
+    Owner      = "organization_name"
+    Expires    = "Never"
+    Department = "Engineering"
+  }
 }
 
 module "eck" {
-  source       = "../../"
-  cluster_name = "dev-skaf"
+  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  cluster_name = "dev-cluster"
   eck_config = {
-    hostname          = "eck.dev.skaf.squareops.in"
+    hostname          = "eck.squareops.in"
     eck_values        = file("./helm/eck.yaml")
     karpenter_enabled = true
     karpenter_config = {
-      private_subnet_name    = "dev-skaf-private-subnet"
+      private_subnet_name    = "private-subnet-name"
       instance_capacity_type = ["spot"]
       excluded_instance_type = ["nano", "micro", "small"]
       karpenter_eck_values   = file("./helm/karpenter.yaml")
