@@ -1,6 +1,6 @@
 karpenter_ec2_capacity_type: ["spot"]
 
 spec:
-labels:
-  ECK-Services: "true"
-  eks.amazonaws.com/nodegroup: "eck-ng"
+  labels:
+    ECK-Services: "true"
+    eks.amazonaws.com/nodegroup: "eck-ng"
