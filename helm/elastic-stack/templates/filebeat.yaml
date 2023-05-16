@@ -28,6 +28,13 @@ spec:
         node: ${NODE_NAME}
         hints:
           enabled: true
+    filebeat.modules:
+    - ingress_controller:
+        enabled: true
+        input.type: container
+        var.paths:
+        - /var/log/containers/ingress-nginx-controller*.log
+      module: nginx
     setup.ilm.enabled: true
     setup.ilm.policy_name: "custom-ilm"
     setup.ilm.policy_file: "/usr/share/filebeat/ilm-policy.json"
