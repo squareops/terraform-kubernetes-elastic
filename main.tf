@@ -16,6 +16,9 @@ resource "kubernetes_namespace" "elastic_system" {
   metadata {
     annotations = {}
     name        = var.namespace
+    labels = {
+      "pod-security.kubernetes.io/warn" = "restricted"
+    }
   }
 }
 
