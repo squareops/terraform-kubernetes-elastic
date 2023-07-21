@@ -10,7 +10,7 @@ locals {
 }
 
 module "eck" {
-  source       = "../.."  #"https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
   cluster_name = "dev-cluster"
   eck_config = {
     hostname          = "eck.squareops.in"
