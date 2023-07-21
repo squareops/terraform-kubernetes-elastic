@@ -79,20 +79,17 @@ resource "helm_release" "elastalert" {
   ]
 }
 
-resource "helm_release" "karpenter_provisioner" {
-  count   = var.eck_config.karpenter_enabled ? 1 : 0
-  name    = "karpenter-provisioner-eck"
-  chart   = "${path.module}/helm/karpenter_provisioner/"
-  timeout = 600
-  values = [
-    templatefile("${path.module}/helm/karpenter_provisioner/values.yaml", {
-      private_subnet_name                  = var.eck_config.karpenter_config.private_subnet_name,
-      cluster_name                         = var.cluster_name,
-      karpenter_ec2_capacity_type          = "[${join(",", [for s in var.eck_config.karpenter_config.instance_capacity_type : format("%s", s)])}]",
-      excluded_karpenter_ec2_instance_type = "[${join(",", var.eck_config.karpenter_config.excluded_instance_type)}]"
-    }),
-    var.eck_config.karpenter_config.karpenter_eck_values
-  ]
+module "karpenter_provisioner_elastic" {
+  count        = var.eck_config.karpenter_enabled ? 1 : 0
+  source       = "git@github.com:sq-ia/terraform-kubernetes-karpenter-provisioner.git"
+  cluster_name = var.cluster_name
+  karpenter_config = {
+    provisioner_name       = var.eck_config.karpenter_config.provisioner_name
+    provisioner_values     = var.eck_config.karpenter_config.provisioner_values
+    private_subnet_name    = var.eck_config.karpenter_config.private_subnet_name
+    instance_capacity_type = var.eck_config.karpenter_config.instance_capacity_type
+    excluded_instance_type = var.eck_config.karpenter_config.excluded_instance_type
+  }
 }
 
 resource "time_sleep" "wait_60_sec" {
