@@ -17,13 +17,6 @@ module "eck" {
     eck_values        = file("./helm/eck.yaml")
     karpenter_enabled = true
     ipv6_enabled      = false
-    karpenter_config = {
-      provisioner_name       = "eck-karpenter-provisioner"
-      provisioner_values     = file("./helm/karpenter.yaml")
-      private_subnet_name    = "private-subnet-name"
-      instance_capacity_type = ["spot"]
-      excluded_instance_type = ["nano", "micro", "small"]
-    }
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
@@ -34,6 +27,7 @@ module "eck" {
     master_node_count    = 1
     data_hot_node_count  = 2
     data_warm_node_count = 2
+    app_label            = ""
   }
 
   elastalert_enabled = false

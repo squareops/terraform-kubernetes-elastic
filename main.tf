@@ -4,6 +4,7 @@ locals {
     "/^https:///",
     ""
   )
+  capacity_type = "spot"
 }
 
 data "aws_caller_identity" "current" {}
@@ -53,6 +54,7 @@ resource "helm_release" "elastic_stack" {
       es_data_warm_node_size  = "${var.eck_config.data_warm_node_size}"
       kibana_node_count       = "${var.eck_config.kibana_node_count}"
       s3_role_arn             = aws_iam_role.eck_role.arn,
+      app_label               = var.eck_config.app_label
     }),
     var.eck_config.eck_values
   ]
@@ -73,23 +75,11 @@ resource "helm_release" "elastalert" {
   values = [
     templatefile("${path.module}/helm/elastalert2/values.yaml", {
       eckpassword       = "${data.kubernetes_secret.eck_secret.data["elastic"]}"
-      slack_webhook_url = var.elastalert_config.slack_webhook_url
+      slack_webhook_url = var.elastalert_config.slack_webhook_url,
+      app_label         = var.eck_config.app_label
     }),
     var.elastalert_config.elastalert_values
   ]
-}
-
-module "karpenter_provisioner_elastic" {
-  count        = var.eck_config.karpenter_enabled ? 1 : 0
-  source       = "git@github.com:sq-ia/terraform-kubernetes-karpenter-provisioner.git"
-  cluster_name = var.cluster_name
-  karpenter_config = {
-    provisioner_name       = var.eck_config.karpenter_config.provisioner_name
-    provisioner_values     = var.eck_config.karpenter_config.provisioner_values
-    private_subnet_name    = var.eck_config.karpenter_config.private_subnet_name
-    instance_capacity_type = var.eck_config.karpenter_config.instance_capacity_type
-    excluded_instance_type = var.eck_config.karpenter_config.excluded_instance_type
-  }
 }
 
 resource "time_sleep" "wait_60_sec" {

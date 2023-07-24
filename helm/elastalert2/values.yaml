@@ -263,7 +263,7 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
       - matchExpressions:
-        - key: "ECK-Services"
+        - key: "${app_label}"
           operator: In
           values:
           - "true"

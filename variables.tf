@@ -13,15 +13,7 @@ variable "eck_config" {
     data_hot_node_size   = "20Gi"
     data_warm_node_size  = "20Gi"
     eck_values           = ""
-    karpenter_enabled    = false
-    ipv6_enabled         = false
-    karpenter_config = {
-      provisioner_name       = ""
-      provisioner_values     = ""
-      private_subnet_name    = ""
-      instance_capacity_type = [""]
-      excluded_instance_type = [""]
-    }
+    app_label            = ""
   }
   description = "Configurations for deploying the Elastic Cloud on Kubernetes (ECK) stack. "
 }
