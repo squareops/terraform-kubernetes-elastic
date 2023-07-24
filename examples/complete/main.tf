@@ -27,7 +27,6 @@ module "eck" {
     master_node_count    = 1
     data_hot_node_count  = 2
     data_warm_node_count = 2
-    app_label            = ""
   }
 
   elastalert_enabled = false

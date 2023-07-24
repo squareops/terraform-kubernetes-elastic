@@ -53,8 +53,7 @@ resource "helm_release" "elastic_stack" {
       es_data_hot_node_size   = "${var.eck_config.data_hot_node_size}"
       es_data_warm_node_size  = "${var.eck_config.data_warm_node_size}"
       kibana_node_count       = "${var.eck_config.kibana_node_count}"
-      s3_role_arn             = aws_iam_role.eck_role.arn,
-      app_label               = var.eck_config.app_label
+      s3_role_arn             = aws_iam_role.eck_role.arn
     }),
     var.eck_config.eck_values
   ]
@@ -75,8 +74,7 @@ resource "helm_release" "elastalert" {
   values = [
     templatefile("${path.module}/helm/elastalert2/values.yaml", {
       eckpassword       = "${data.kubernetes_secret.eck_secret.data["elastic"]}"
-      slack_webhook_url = var.elastalert_config.slack_webhook_url,
-      app_label         = var.eck_config.app_label
+      slack_webhook_url = var.elastalert_config.slack_webhook_url
     }),
     var.elastalert_config.elastalert_values
   ]
