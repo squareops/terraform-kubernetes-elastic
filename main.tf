@@ -4,7 +4,6 @@ locals {
     "/^https:///",
     ""
   )
-  capacity_type = "spot"
 }
 
 data "aws_caller_identity" "current" {}
