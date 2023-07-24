@@ -15,8 +15,6 @@ module "eck" {
   eck_config = {
     hostname          = "eck.squareops.in"
     eck_values        = file("./helm/eck.yaml")
-    karpenter_enabled = true
-    ipv6_enabled      = false
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
