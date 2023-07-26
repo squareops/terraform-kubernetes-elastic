@@ -9,4 +9,4 @@ spec:
   elasticsearchRef:
     name: elasticsearch
   kibanaRef:
-    name: kibana           
+    name: kibana
