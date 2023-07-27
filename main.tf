@@ -52,7 +52,7 @@ resource "helm_release" "elastic_stack" {
       es_data_hot_node_size   = "${var.eck_config.data_hot_node_size}"
       es_data_warm_node_size  = "${var.eck_config.data_warm_node_size}"
       kibana_node_count       = "${var.eck_config.kibana_node_count}"
-      s3_role_arn             = aws_iam_role.eck_role.arn,
+      s3_role_arn             = aws_iam_role.eck_role.arn
     }),
     var.eck_config.eck_values
   ]
@@ -76,22 +76,6 @@ resource "helm_release" "elastalert" {
       slack_webhook_url = var.elastalert_config.slack_webhook_url
     }),
     var.elastalert_config.elastalert_values
-  ]
-}
-
-resource "helm_release" "karpenter_provisioner" {
-  count   = var.eck_config.karpenter_enabled ? 1 : 0
-  name    = "karpenter-provisioner-eck"
-  chart   = "${path.module}/helm/karpenter_provisioner/"
-  timeout = 600
-  values = [
-    templatefile("${path.module}/helm/karpenter_provisioner/values.yaml", {
-      private_subnet_name                  = var.eck_config.karpenter_config.private_subnet_name,
-      cluster_name                         = var.cluster_name,
-      karpenter_ec2_capacity_type          = "[${join(",", [for s in var.eck_config.karpenter_config.instance_capacity_type : format("%s", s)])}]",
-      excluded_karpenter_ec2_instance_type = "[${join(",", var.eck_config.karpenter_config.excluded_instance_type)}]"
-    }),
-    var.eck_config.karpenter_config.karpenter_eck_values
   ]
 }
 

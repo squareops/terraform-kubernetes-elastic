@@ -13,15 +13,8 @@ module "eck" {
   source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
   cluster_name = "dev-cluster"
   eck_config = {
-    hostname          = "eck.squareops.in"
-    eck_values        = file("./helm/eck.yaml")
-    karpenter_enabled = true
-    karpenter_config = {
-      private_subnet_name    = "private-subnet-name"
-      instance_capacity_type = ["spot"]
-      excluded_instance_type = ["nano", "micro", "small"]
-      karpenter_eck_values   = file("./helm/karpenter.yaml")
-    }
+    hostname             = "eck.squareops.in"
+    eck_values           = file("./helm/eck.yaml")
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"

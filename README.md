@@ -9,15 +9,15 @@
 This ECK module is a Kubernetes operator for Elasticsearch and Kibana that simplifies the deployment, management, and scaling of Elasticsearch and Kibana clusters in Kubernetes environments. The ECK module allows you to easily create and configure Elasticsearch and Kibana clusters, and provides customization options such as persistent volume claim templates and storage classes. Additionally, the ECK module provides security features such as encryption and authentication for Elasticsearch and Kibana clusters. With the ECK module, you can manage Elasticsearch and Kibana clusters in a scalable and efficient manner, while also ensuring the security of your data.
 
 ## Important Notes:
-This module is compatible with EKS version 1.23 which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
+This module is compatible with EKS version 1.23,1.24,1.25 and 1.26 which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
 
 ## Supported Versions Table:
 
-| Resources              |  Helm Chart Version                |     K8s supported version   |  
-| :-----:               | :---                               |         :---                |
-| Elastic-Operator      | **2.7.0**                          |    **1.23**           |
-| ECK                   | **7.17.3**                         |    **1.23**           |
-| Elastalert2           | **2.9.0**                          |    **1.23**           |
+| Resources             |  Helm Chart Version                |     K8s supported version                        |  
+| :-----:               | :---                               |         :---                                     |
+| Elastic-Operator      | **2.7.0**                          |    **1.23**,**1.24**,**1.25**,**1.26**           |
+| ECK                   | **7.17.3**                         |    **1.23**,**1.24**,**1.25**,**1.26**           |
+| Elastalert2           | **2.9.0**                          |    **1.23**,**1.24**,**1.25**,**1.26**           |
 
 
 ## Usage Example
@@ -29,13 +29,6 @@ module "eck" {
   eck_config = {
     hostname          = "eck.squareops.in"
     eck_values        = ""
-    karpenter_enabled = true
-    karpenter_config = {
-      private_subnet_name    = "private-subnet-name"
-      instance_capacity_type = ["spot"]
-      excluded_instance_type = ["nano", "micro", "small"]
-      karpenter_eck_values   = ""
-    }
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
@@ -57,10 +50,10 @@ module "eck" {
 
 
 ```
-Refer [examples](https://github.com/sq-ia/terraform-kubernetes-eck/tree/main/examples/complete) for more details.
+Refer [examples](https://github.com/sq-ia/terraform-kubernetes-elastic/tree/main/examples/complete) for more details.
 
 ## IAM Permissions
-The required IAM permissions to create resources from this module can be found [here](https://github.com/sq-ia/terraform-kubernetes-eck/blob/main/IAM.md)
+The required IAM permissions to create resources from this module can be found [here](https://github.com/sq-ia/terraform-kubernetes-elastic/blob/main/IAM.md)
 
 ## Elast Alert
 
@@ -96,7 +89,6 @@ No modules.
 | [helm_release.eck_operator](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.elastalert](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.elastic_stack](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
-| [helm_release.karpenter_provisioner](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubernetes_namespace.elastic_system](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 | [time_sleep.wait_60_sec](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
@@ -109,7 +101,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of Helm chart to be used for deploying the ECK stack. | `string` | `"2.9.0"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster to which the ECK stack should be deployed. | `string` | `""` | no |
-| <a name="input_eck_config"></a> [eck\_config](#input\_eck\_config) | Configurations for deploying the Elastic Cloud on Kubernetes (ECK) stack. | `any` | <pre>{<br>  "data_hot_node_count": 1,<br>  "data_hot_node_sc": "gp2",<br>  "data_hot_node_size": "20Gi",<br>  "data_warm_node_count": 1,<br>  "data_warm_node_sc": "gp2",<br>  "data_warm_node_size": "20Gi",<br>  "eck_values": "",<br>  "hostname": "",<br>  "karpenter_config": {<br>    "excluded_instance_type": [<br>      "nano",<br>      "micro",<br>      "small"<br>    ],<br>    "instance_capacity_type": [<br>      "spot"<br>    ],<br>    "karpenter_eck_values": "",<br>    "private_subnet_name": ""<br>  },<br>  "karpenter_enabled": "",<br>  "kibana_node_count": 1,<br>  "master_node_count": 1,<br>  "master_node_sc": "gp2",<br>  "master_node_size": "10Gi"<br>}</pre> | no |
+| <a name="input_eck_config"></a> [eck\_config](#input\_eck\_config) | Configurations for deploying the Elastic Cloud on Kubernetes (ECK) stack. | `any` | <pre>{<br>  "data_hot_node_count": 1,<br>  "data_hot_node_sc": "gp2",<br>  "data_hot_node_size": "20Gi",<br>  "data_warm_node_count": 1,<br>  "data_warm_node_sc": "gp2",<br>  "data_warm_node_size": "20Gi",<br>  "eck_values": "",<br>  "hostname": "",<br>  "kibana_node_count": 1,<br>  "master_node_count": 1,<br>  "master_node_sc": "gp2",<br>  "master_node_size": "10Gi"<br>}</pre> | no |
 | <a name="input_eck_version"></a> [eck\_version](#input\_eck\_version) | Version of ECK to be deployed on Kubernetes. | `string` | `"7.17.3"` | no |
 | <a name="input_elastalert_config"></a> [elastalert\_config](#input\_elastalert\_config) | Configurations for deploying the Elastalert tool, which is an alerting system for Elasticsearch. | `map(any)` | <pre>{<br>  "elastalert_values": "",<br>  "slack_webhook_url": ""<br>}</pre> | no |
 | <a name="input_elastalert_enabled"></a> [elastalert\_enabled](#input\_elastalert\_enabled) | Whether the Elastalert tool should be deployed along with the ECK stack or not. | `bool` | `false` | no |
@@ -125,7 +117,7 @@ No modules.
 
 To report an issue with a project:
 
-  1. Check the repository's [issue tracker](https://github.com/sq-ia/terraform-kubernetes-eck/issues) on GitHub
+  1. Check the repository's [issue tracker](https://github.com/sq-ia/terraform-kubernetes-elastic/issues) on GitHub
   2. Search to see if the issue has already been reported
   3. If you can't find an answer to your question in the documentation or issue tracker, you can ask a question by creating a new issue. Be sure to provide enough context and details so others can understand your problem.
 
@@ -137,7 +129,7 @@ Apache License, Version 2.0, January 2004 (http://www.apache.org/licenses/).
 
 To support a GitHub project by liking it, you can follow these steps:
 
-  1. Visit the repository: Navigate to the [GitHub repository](https://github.com/sq-ia/terraform-kubernetes-eck).
+  1. Visit the repository: Navigate to the [GitHub repository](https://github.com/sq-ia/terraform-kubernetes-elastic).
 
   2. Click the "Star" button: On the repository page, you'll see a "Star" button in the upper right corner. Clicking on it will star the repository, indicating your support for the project.
 
