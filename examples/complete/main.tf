@@ -11,7 +11,7 @@ locals {
 
 module "eck" {
   source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  cluster_name = "dev-cluster"
+  cluster_name = ""
   eck_config = {
     hostname             = "eck.squareops.in"
     eck_values           = file("./helm/eck.yaml")
@@ -26,7 +26,7 @@ module "eck" {
     data_hot_node_count  = 2
     data_warm_node_count = 2
   }
-
+  exporter_enabled   = true
   elastalert_enabled = false
   elastalert_config = {
     slack_webhook_url = ""

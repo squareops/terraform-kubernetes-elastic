@@ -92,6 +92,21 @@ data "kubernetes_secret" "eck_secret" {
   }
 }
 
+resource "helm_release" "elasticsearch_exporter" {
+  # depends_on = [kubernetes_secret.eck_secret]
+  count      = var.exporter_enabled ? 1 : 0
+  name       = "elasticsearch-exporter"
+  chart      = "prometheus-elasticsearch-exporter"
+  version    = "5.1.1"
+  timeout    = 300
+  namespace  = var.namespace
+  repository = "https://prometheus-community.github.io/helm-charts"
+  values = [
+    file("${path.module}/helm/elasticsearch-exporter/elasticsearch-exporter.yaml")
+  ]
+}
+
+
 resource "aws_iam_role" "eck_role" {
   name = join("-", [var.cluster_name, "elastic-system"])
   assume_role_policy = jsonencode({
