@@ -89,6 +89,7 @@ No modules.
 | [helm_release.eck_operator](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.elastalert](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.elastic_stack](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
+| [helm_release.elasticsearch_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubernetes_namespace.elastic_system](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
 | [time_sleep.wait_60_sec](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
@@ -105,6 +106,7 @@ No modules.
 | <a name="input_eck_version"></a> [eck\_version](#input\_eck\_version) | Version of ECK to be deployed on Kubernetes. | `string` | `"7.17.3"` | no |
 | <a name="input_elastalert_config"></a> [elastalert\_config](#input\_elastalert\_config) | Configurations for deploying the Elastalert tool, which is an alerting system for Elasticsearch. | `map(any)` | <pre>{<br>  "elastalert_values": "",<br>  "slack_webhook_url": ""<br>}</pre> | no |
 | <a name="input_elastalert_enabled"></a> [elastalert\_enabled](#input\_elastalert\_enabled) | Whether the Elastalert tool should be deployed along with the ECK stack or not. | `bool` | `false` | no |
+| <a name="input_exporter_enabled"></a> [exporter\_enabled](#input\_exporter\_enabled) | Whether the ECK exporter should be deployed along with the ECK stack or not. | `bool` | `true` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Name of the Kubernetes namespace where the ECK deployment will be deployed. | `string` | `"elastic-system"` | no |
 
 ## Outputs

@@ -42,6 +42,13 @@ variable "elastalert_enabled" {
   description = "Whether the Elastalert tool should be deployed along with the ECK stack or not. "
 }
 
+variable "exporter_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether the ECK exporter should be deployed along with the ECK stack or not. "
+}
+
+
 variable "cluster_name" {
   type        = string
   default     = ""
