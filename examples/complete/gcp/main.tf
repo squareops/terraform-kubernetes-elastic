@@ -11,8 +11,8 @@ locals {
 
 module "eck" {
   source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  cluster_name = ""
   eck_config = {
+    provider_type        = "gcp"
     hostname             = "eck.squareops.in"
     eck_values           = file("./helm/eck.yaml")
     master_node_sc       = "gp2"

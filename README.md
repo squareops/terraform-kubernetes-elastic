@@ -9,11 +9,11 @@
 This ECK module is a Kubernetes operator for Elasticsearch and Kibana that simplifies the deployment, management, and scaling of Elasticsearch and Kibana clusters in Kubernetes environments. The ECK module allows you to easily create and configure Elasticsearch and Kibana clusters, and provides customization options such as persistent volume claim templates and storage classes. Additionally, the ECK module provides security features such as encryption and authentication for Elasticsearch and Kibana clusters. With the ECK module, you can manage Elasticsearch and Kibana clusters in a scalable and efficient manner, while also ensuring the security of your data.
 
 ## Important Notes:
-This module is compatible with EKS version 1.23,1.24,1.25 and 1.26 which is great news for users deploying the module on an EKS cluster running that version. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
+This module is compatible with EKS, AKS & GKE which is great news for users deploying the module on an AWS, Azure & GCP cloud. Review the module's documentation, meet specific configuration requirements, and test thoroughly after deployment to ensure everything works as expected.
 
 ## Supported Versions Table:
 
-| Resources             |  Helm Chart Version                |     K8s supported version                        |  
+| Resources             |  Helm Chart Version                |     K8s supported version (EKS, AKS & GKE)                       |  
 | :-----:               | :---                               |         :---                                     |
 | Elastic-Operator      | **2.7.0**                          |    **1.23**,**1.24**,**1.25**,**1.26**           |
 | ECK                   | **7.17.3**                         |    **1.23**,**1.24**,**1.25**,**1.26**           |
@@ -23,12 +23,17 @@ This module is compatible with EKS version 1.23,1.24,1.25 and 1.26 which is grea
 ## Usage Example
 
 ```hcl
+module "aws" {
+  source = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
+  cluster_name     = "prod-eks"
+}
+
 module "eck" {
   source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  cluster_name = "dev-cluster"
   eck_config = {
-    hostname          = "eck.squareops.in"
-    eck_values        = ""
+    provider_type        = "aws"
+    hostname             = "eck.squareops.in"
+    eck_values           = ""
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
@@ -39,8 +44,9 @@ module "eck" {
     master_node_count    = 1
     data_hot_node_count  = 2
     data_warm_node_count = 2
+    role_arn             = module.aws.role_arn
   }
-
+  exporter_enabled   = true
   elastalert_enabled = false
   elastalert_config = {
     slack_webhook_url = ""
@@ -50,7 +56,9 @@ module "eck" {
 
 
 ```
-Refer [examples](https://github.com/sq-ia/terraform-kubernetes-elastic/tree/main/examples/complete) for more details.
+- Refer [AWS examples](https://github.com/sq-ia/terraform-kubernetes-elastic/tree/main/examples/complete/aws) for more details.
+- Refer [Azure examples](https://github.com/sq-ia/terraform-kubernetes-elastic/tree/main/examples/complete/azure) for more details.
+- Refer [GCP examples](https://github.com/sq-ia/terraform-kubernetes-elastic/tree/main/examples/complete/gcp) for more details.
 
 ## IAM Permissions
 The required IAM permissions to create resources from this module can be found [here](https://github.com/sq-ia/terraform-kubernetes-elastic/blob/main/IAM.md)
@@ -73,6 +81,8 @@ No requirements.
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+| <a name="provider_google"></a> [google](#provider\_google) | n/a |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | n/a |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | n/a |
 | <a name="provider_time"></a> [time](#provider\_time) | n/a |

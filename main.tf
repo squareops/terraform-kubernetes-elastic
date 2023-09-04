@@ -1,17 +1,3 @@
-locals {
-  oidc_provider = replace(
-    data.aws_eks_cluster.kubernetes_cluster.identity[0].oidc[0].issuer,
-    "/^https:///",
-    ""
-  )
-}
-
-data "aws_caller_identity" "current" {}
-
-data "aws_eks_cluster" "kubernetes_cluster" {
-  name = var.cluster_name
-}
-
 resource "kubernetes_namespace" "elastic_system" {
   metadata {
     annotations = {}
@@ -52,7 +38,7 @@ resource "helm_release" "elastic_stack" {
       es_data_hot_node_size   = "${var.eck_config.data_hot_node_size}"
       es_data_warm_node_size  = "${var.eck_config.data_warm_node_size}"
       kibana_node_count       = "${var.eck_config.kibana_node_count}"
-      s3_role_arn             = aws_iam_role.eck_role.arn
+      s3_role_arn             = var.provider_type == "aws" ? var.role_arn : ""
     }),
     var.eck_config.eck_values
   ]
@@ -93,7 +79,7 @@ data "kubernetes_secret" "eck_secret" {
 }
 
 resource "helm_release" "elasticsearch_exporter" {
-  # depends_on = [kubernetes_secret.eck_secret]
+  depends_on = [data.kubernetes_secret.eck_secret]
   count      = var.exporter_enabled ? 1 : 0
   name       = "elasticsearch-exporter"
   chart      = "prometheus-elasticsearch-exporter"
@@ -104,47 +90,4 @@ resource "helm_release" "elasticsearch_exporter" {
   values = [
     file("${path.module}/helm/elasticsearch-exporter/elasticsearch-exporter.yaml")
   ]
-}
-
-
-resource "aws_iam_role" "eck_role" {
-  name = join("-", [var.cluster_name, "elastic-system"])
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${local.oidc_provider}"
-        },
-        Action = "sts:AssumeRoleWithWebIdentity",
-        Condition = {
-          StringEquals = {
-            "${local.oidc_provider}:aud" = "sts.amazonaws.com",
-            "${local.oidc_provider}:sub" = "system:serviceaccount:elastic-system:sa-elastic"
-          }
-        }
-      }
-    ]
-  })
-  inline_policy {
-    name = "AllowS3PutObject"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Action = [
-            "s3:GetObject",
-            "s3:PutObject",
-            "s3:ListBucket",
-            "s3:DeleteObject",
-            "s3:AbortMultipartUpload",
-            "s3:ListMultipartUploadParts"
-          ]
-          Effect   = "Allow"
-          Resource = "*"
-        }
-      ]
-    })
-  }
 }
