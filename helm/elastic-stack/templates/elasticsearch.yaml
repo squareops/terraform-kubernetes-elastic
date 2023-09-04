@@ -18,9 +18,9 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          env:
-            - name: ES_JAVA_OPTS
-              value: {{ .Values.ES_JAVA_OPTS }}
+          # env:
+          #   - name: ES_JAVA_OPTS
+          #     value: {{ .Values.ES_JAVA_OPTS }}
         initContainers:
         - name: install-plugins
           command:
@@ -39,7 +39,7 @@ spec:
           labelSelector:
             elasticsearch.k8s.elastic.co/node-master: true
     config:
-      node.roles: ["master"]
+      node.roles: ["master", "remote_cluster_client"]
       node.store.allow_mmap: false
       xpack.monitoring.collection.enabled: true
       cluster.routing.rebalance.enable: all
@@ -66,9 +66,9 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          env:
-            - name: ES_JAVA_OPTS
-              value: {{ .Values.ES_JAVA_OPTS }}
+          # env:
+          #   - name: ES_JAVA_OPTS
+          #     value: {{ .Values.ES_JAVA_OPTS }}
         initContainers:
         - name: install-plugins
           command:
@@ -114,9 +114,9 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          env:
-            - name: ES_JAVA_OPTS
-              value: {{ .Values.ES_JAVA_OPTS }}
+          # env:
+          #   - name: ES_JAVA_OPTS
+          #     value: {{ .Values.ES_JAVA_OPTS }}
         initContainers:
         - name: install-plugins
           command:
