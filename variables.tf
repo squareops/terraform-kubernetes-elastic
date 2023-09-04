@@ -6,7 +6,7 @@ variable "eck_config" {
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
     kibana_node_count    = 1
-    master_node_count    = 1
+    master_node_count    = 3
     data_hot_node_count  = 1
     data_warm_node_count = 1
     master_node_size     = "10Gi"

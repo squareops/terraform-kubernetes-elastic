@@ -93,7 +93,7 @@ data "kubernetes_secret" "eck_secret" {
 }
 
 resource "helm_release" "elasticsearch_exporter" {
-  # depends_on = [kubernetes_secret.eck_secret]
+  depends_on = [data.kubernetes_secret.eck_secret]
   count      = var.exporter_enabled ? 1 : 0
   name       = "elasticsearch-exporter"
   chart      = "prometheus-elasticsearch-exporter"
