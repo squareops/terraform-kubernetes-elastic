@@ -61,7 +61,7 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
       - matchExpressions:
-        - key: "ECK-Services"
+        - key: "Monitor-Services"
           operator: In
           values:
           - "true"

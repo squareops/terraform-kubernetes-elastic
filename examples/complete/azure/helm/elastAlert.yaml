@@ -1,0 +1,27 @@
+rules:
+  slack_alert: |-
+    ---
+    name: elast_alert
+    type: frequency
+    index: filebeat-*
+    num_events: 5
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 404"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: https://hooks.slack.com/services/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
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "Monitor-Services"
+          operator: In
+          values:
+          - "true"

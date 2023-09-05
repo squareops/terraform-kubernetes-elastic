@@ -28,6 +28,8 @@ spec:
           - -c
           - |
             bin/elasticsearch-plugin install --batch repository-s3
+            bin/elasticsearch-plugin install --batch repository-azure
+            bin/elasticsearch-plugin install --batch repository-gcs
       {{- with .Values.affinity }}
         affinity:
           {{- toYaml . | nindent 10 }}

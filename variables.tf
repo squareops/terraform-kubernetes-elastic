@@ -61,3 +61,15 @@ variable "namespace" {
   default     = "elastic-system"
   description = "Name of the Kubernetes namespace where the ECK deployment will be deployed."
 }
+
+variable "provider_type" {
+  type        = string
+  default     = ""
+  description = "Choose what type of provider you want (aws, gcp)" // SUPPORTS ONLY: aws, gcp, azure
+}
+
+variable "role_arn" {
+  type        = string
+  default     = ""
+  description = "The s3 bucket role arn for the aws bucket provider" // SUPPORTS ONLY: aws, gcp
+}

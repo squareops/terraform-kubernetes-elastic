@@ -9,10 +9,16 @@ locals {
   }
 }
 
-module "eck" {
-  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+module "aws" {
+  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
   cluster_name = ""
+}
+
+module "eck" {
+  source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  namespace = "elastic-system"
   eck_config = {
+    provider_type        = "aws"
     hostname             = "eck.squareops.in"
     eck_values           = file("./helm/eck.yaml")
     master_node_sc       = "gp2"
@@ -25,6 +31,7 @@ module "eck" {
     master_node_count    = 1
     data_hot_node_count  = 2
     data_warm_node_count = 2
+    role_arn             = module.aws.role_arn
   }
   exporter_enabled   = true
   elastalert_enabled = false
