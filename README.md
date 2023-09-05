@@ -15,9 +15,9 @@ This module is compatible with EKS, AKS & GKE which is great news for users depl
 
 | Resources             |  Helm Chart Version                |     K8s supported version (EKS, AKS & GKE)                       |  
 | :-----:               | :---                               |         :---                                     |
-| Elastic-Operator      | **2.7.0**                          |    **1.23**,**1.24**,**1.25**,**1.26**           |
-| ECK                   | **7.17.3**                         |    **1.23**,**1.24**,**1.25**,**1.26**           |
-| Elastalert2           | **2.9.0**                          |    **1.23**,**1.24**,**1.25**,**1.26**           |
+| Elastic-Operator      | **2.7.0**                          |    **1.23**,**1.24**,**1.25**,**1.26**,**1.27**           |
+| ECK                   | **7.17.3**                         |    **1.23**,**1.24**,**1.25**,**1.26**,**1.27**           |
+| Elastalert2           | **2.9.0**                          |    **1.23**,**1.24**,**1.25**,**1.26**,**1.27**           |
 
 
 ## Usage Example
