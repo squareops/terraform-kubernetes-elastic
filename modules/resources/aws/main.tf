@@ -13,13 +13,6 @@ data "aws_eks_cluster" "kubernetes_cluster" {
   name = var.cluster_name
 }
 
-variable "cluster_name" {
-  type        = string
-  default     = "test"
-  description = "Name of the EKS cluster to which the ECK stack should be deployed."
-
-}
-
 resource "aws_iam_role" "eck_role" {
   name = join("-", [var.cluster_name, "elastic-system"])
   assume_role_policy = jsonencode({
@@ -60,8 +53,4 @@ resource "aws_iam_role" "eck_role" {
       ]
     })
   }
-}
-
-output "role_arn" {
-  value = aws_iam_role.eck_role.arn
 }

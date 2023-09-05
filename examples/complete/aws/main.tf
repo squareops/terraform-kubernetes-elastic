@@ -16,7 +16,7 @@ module "aws" {
 
 module "eck" {
   source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  namespace = ""
+  namespace = "elastic-system"
   eck_config = {
     provider_type        = "aws"
     hostname             = "eck.squareops.in"

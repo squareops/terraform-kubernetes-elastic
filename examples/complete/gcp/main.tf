@@ -11,7 +11,7 @@ locals {
 
 module "eck" {
   source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  namespace = ""
+  namespace = "elastic-system"
   eck_config = {
     provider_type        = "gcp"
     hostname             = "eck.squareops.in"
