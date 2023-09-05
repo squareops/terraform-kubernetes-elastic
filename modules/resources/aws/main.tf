@@ -13,14 +13,6 @@ data "aws_eks_cluster" "kubernetes_cluster" {
   name = var.cluster_name
 }
 
-data "kubernetes_secret" "eck_secret" {
-  depends_on = [time_sleep.wait_60_sec]
-  metadata {
-    name      = "elasticsearch-es-elastic-user"
-    namespace = var.namespace
-  }
-}
-
 variable "cluster_name" {
   type        = string
   default     = "test"

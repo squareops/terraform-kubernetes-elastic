@@ -10,7 +10,8 @@ locals {
 }
 
 module "eck" {
-  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  namespace = ""
   eck_config = {
     provider_type        = "azure"
     hostname             = ""

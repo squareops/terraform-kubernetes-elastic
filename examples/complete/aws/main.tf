@@ -10,12 +10,13 @@ locals {
 }
 
 module "aws" {
-  source = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
-  cluster_name     = var.cluster_name
+  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
+  cluster_name = ""
 }
 
 module "eck" {
-  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  namespace = ""
   eck_config = {
     provider_type        = "aws"
     hostname             = "eck.squareops.in"

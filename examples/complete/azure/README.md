@@ -40,3 +40,36 @@ No inputs.
 |------|-------------|
 | <a name="output_eck_credentials"></a> [eck\_credentials](#output\_eck\_credentials) | ECK\_Info |
 <!-- END_TF_DOCS -->
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_eck"></a> [eck](#module\_eck) | https://github.com/sq-ia/terraform-kubernetes-elastic.git | n/a |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_kubernetes_cluster.primary](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/kubernetes_cluster) | data source |
+
+## Inputs
+
+No inputs.
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_eck_credentials"></a> [eck\_credentials](#output\_eck\_credentials) | ECK\_Info |
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
