@@ -53,6 +53,49 @@ module "eck" {
     slack_webhook_url = ""
     elastalert_values = ""
   }
+    # Multiple Indices
+  application_index_enabled       = true
+  aws_index_enabled               = false
+  database_mysql_index_enabled    = false
+  database_mongodb_index_enabled  = false
+  database_redis_index_enabled    = false
+  database_rabbitmq_index_enabled = false
+  database_postgres_index_enabled = false
+  application_index_name          = "application"
+  database_index_name             = "database"
+  application_input_type_key      = "kubernetes.namespace"
+  application_input_type_value    = "robotshop"
+  mongodb_input_type_key          = "kubernetes.namespace"
+  mongodb_input_type_value        = "mongodb"
+  mysql_input_type_key            = "kubernetes.namespace"
+  mysql_input_type_value          = "mysql"
+  redis_input_type_key            = "kubernetes.namespace"
+  redis_input_type_value          = "redis"
+  rabbitmq_input_type_key         = "kubernetes.namespace"
+  rabbitmq_input_type_value       = "rabbitmq"
+  postgres_input_type_key         = "kubernetes.namespace"
+  postgres_input_type_value       = "postgres"
+  # Note: If you enabled "aws" index, you won't be able to visualize AWS modules kibana dashboards.
+  aws_input_type_key   = "input.type"
+  aws_input_type_value = "aws-s3"
+  # Filebeat Modules
+  ingress_nginx_controller_enabled = true
+  mongodb_enabled                  = true
+  mysql_enabled                    = true
+  postgresql_enabled               = false
+  filebeat_role_arn                = module.aws.filebeat_role_arn
+  aws_cloudtrail_enabled           = false
+  cloudtrail_bucket_arn            = "arn:s3::xxxxxxx"
+  cloudtrail_bucket_prefix         = "logs/"
+  aws_elb_enabled                  = false
+  elb_bucket_arn                   = "arn:s3::xxxxxxx"
+  elb_bucket_prefix                = "access-logs/"
+  aws_vpc_flow_logs_enabled        = false
+  vpc_flowlogs_bucket_arn          = "arn:s3::xxxxxxx"
+  vpc_flowlogs_bucket_prefix       = "vpc-logs/"
+  aws_s3access_enabled             = false
+  s3access_bucket_arn              = "arn:s3::xxxxxxx"
+  s3access_bucket_prefix           = "s3-access/"
 }
 
 

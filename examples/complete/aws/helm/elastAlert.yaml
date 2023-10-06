@@ -1,7 +1,7 @@
 rules:
   slack_alert: |-
     ---
-    name: elast_alert
+    name: elast_alert_4xx_5xx
     type: frequency
     index: filebeat-*
     num_events: 5
@@ -10,11 +10,12 @@ rules:
     filter:
     - query:
         query_string:
-          query: "http.response.status_code : 404"
+          query: "http.response.status_code : 400 or http.response.status_code : 401 or http.response.status_code : 402 or http.response.status_code : 403 or http.response.status_code : 500 or http.response.status_code : 501 or http.response.status_code : 502 or http.response.status_code : 503"
     alert:
     - "slack"
     slack:
-    slack_webhook_url: https://hooks.slack.com/services/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
+    slack_webhook_url: ""
+    
 
 affinity:
   nodeAffinity:
