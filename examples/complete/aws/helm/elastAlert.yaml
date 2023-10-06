@@ -15,7 +15,7 @@ rules:
     - "slack"
     slack:
     slack_webhook_url: ""
-    
+
 
 affinity:
   nodeAffinity:

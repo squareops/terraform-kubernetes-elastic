@@ -51,35 +51,35 @@ spec:
         input.type: container
         var.paths:
         - /var/log/containers/ingress-nginx-controller*.log
-    - module: aws   
-      cloudtrail:                                                                                                                                                                    
-        enabled: {{ .Values.filebeat.modules.aws_cloudtrail_enabled }}                                                                                                                                                                                                                                                                                                 
-        var.bucket_arn: {{ .Values.filebeat.modules.cloudtrail_bucket_arn }}                                                                                                     
-        var.bucket_list_interval: 300s                                                                                                                                               
+    - module: aws
+      cloudtrail:
+        enabled: {{ .Values.filebeat.modules.aws_cloudtrail_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.cloudtrail_bucket_arn }}
+        var.bucket_list_interval: 300s
         var.bucket_list_prefix: {{ .Values.filebeat.modules.cloudtrail_bucket_prefix }}
-        var.number_of_workers: 5                                                                                                                                                     
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }}                                                                                                              
-      elb:                                                                                                                                                                           
-        enabled: {{ .Values.filebeat.modules.aws_elb_enabled }}                                                                                                                                                                                                                                                                                       
-        var.bucket_arn: {{ .Values.filebeat.modules.elb_bucket_arn }}                                                                                                                 
-        var.bucket_list_interval: 300s                                                                                                                                               
-        var.bucket_list_prefix: {{ .Values.filebeat.modules.elb_bucket_prefix }}                                                                                            
-        var.number_of_workers: 5                                                                                                                                                     
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }}                                                                                                                                                                                                                                                                      
-      vpcflow:                                                                                                                                                                       
-        enabled: {{ .Values.filebeat.modules.aws_vpc_flow_logs_enabled }}                                                                                                                                                                                                                                                                                                    
-        var.bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}                                                                                                                          
-        var.bucket_list_interval: 300s                                                                                                                                               
-        var.bucket_list_prefix: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_prefix }}                                                                                                
-        var.number_of_workers: 5                                                                                                                                                     
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }} 
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      elb:
+        enabled: {{ .Values.filebeat.modules.aws_elb_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.elb_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.elb_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      vpcflow:
+        enabled: {{ .Values.filebeat.modules.aws_vpc_flow_logs_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
       s3access:
         enabled: {{ .Values.filebeat.modules.aws_s3access_enabled }}
         var.bucket_arn: {{ .Values.filebeat.modules.s3access_bucket_arn }}
         var.bucket_list_interval: 300s
         var.bucket_list_prefix: {{ .Values.filebeat.modules.s3access_bucket_prefix }}
         var.number_of_workers: 5
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }} 
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
     - module: mongodb
       log:
         enabled: {{ .Values.filebeat.modules.mongodb_enabled }}

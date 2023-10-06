@@ -74,12 +74,12 @@ resource "aws_iam_role" "filebeat_role" {
         }
       },
       {
-        "Effect": "Allow",
-        "Principal": {
-            "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-            "Service": "ec2.amazonaws.com"
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+          "Service" : "ec2.amazonaws.com"
         },
-        "Action": "sts:AssumeRole"
+        "Action" : "sts:AssumeRole"
       }
     ]
   })
@@ -89,21 +89,21 @@ resource "aws_iam_role" "filebeat_role" {
       Version = "2012-10-17"
       Statement = [
         {
-            "Sid": "filebeat",
-            "Effect": "Allow",
-            "Action": [
-                "sts:AssumeRole",
-                "sqs:ListQueues",
-                "tag:GetResources",
-                "ec2:DescribeInstances",
-                "cloudwatch:GetMetricData",
-                "ec2:DescribeRegions",
-                "iam:ListAccountAliases",
-                "sts:GetCallerIdentity",
-                "cloudwatch:ListMetrics",
-                "s3:*"
-            ],
-            "Resource": "*"
+          "Sid" : "filebeat",
+          "Effect" : "Allow",
+          "Action" : [
+            "sts:AssumeRole",
+            "sqs:ListQueues",
+            "tag:GetResources",
+            "ec2:DescribeInstances",
+            "cloudwatch:GetMetricData",
+            "ec2:DescribeRegions",
+            "iam:ListAccountAliases",
+            "sts:GetCallerIdentity",
+            "cloudwatch:ListMetrics",
+            "s3:*"
+          ],
+          "Resource" : "*"
         }
       ]
     })
