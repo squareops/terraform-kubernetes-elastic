@@ -40,6 +40,7 @@ resource "helm_release" "elastic_stack" {
       es_data_warm_node_size           = "${var.eck_config.data_warm_node_size}"
       kibana_node_count                = "${var.eck_config.kibana_node_count}"
       s3_role_arn                      = var.provider_type == "aws" ? var.role_arn : ""
+      aws_modules_enabled              = var.aws_modules_enabled
       filebeat_role_arn                = var.filebeat_role_arn
       application_index_name           = var.application_index_name
       application_input_type_key       = var.application_input_type_key
@@ -124,6 +125,14 @@ resource "null_resource" "es_secret" {
   depends_on = [data.kubernetes_secret.eck_secret, time_sleep.wait_60_sec]
   provisioner "local-exec" {
     command = "kubectl patch beat filebeat -n ${var.namespace} --type merge -p '{\"spec\":{\"config\":{\"output.elasticsearch\":{\"password\":\"${data.kubernetes_secret.eck_secret.data["elastic"]}\"}}}}'"
+  }
+}
+
+resource "null_resource" "es_aws_secret" {
+  count      = var.aws_modules_enabled ? 1 : 0
+  depends_on = [data.kubernetes_secret.eck_secret, time_sleep.wait_60_sec]
+  provisioner "local-exec" {
+    command = "kubectl patch beat filebeat-aws -n ${var.namespace} --type merge -p '{\"spec\":{\"config\":{\"output.elasticsearch\":{\"password\":\"${data.kubernetes_secret.eck_secret.data["elastic"]}\"}}}}'"
   }
 }
 

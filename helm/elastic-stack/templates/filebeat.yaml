@@ -13,10 +13,18 @@ spec:
     name: kibana
   config:
     filebeat.inputs:
-    - type: aws-s3
-      bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}
-      role_arn: {{ .Values.filebeat.modules.role_arn }}
-      number_of_workers: 5
+    - type: filestream
+      id: multiline-filter
+      enabled: true
+      multiline.match: after
+      multiline.negate: true
+      multiline.pattern:
+      - '^[[:space:]]+(at|\.{3})[[:space:]]+\b|^Caused by:'
+      - '\\$'
+      - '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
+      - '^\s'
+      paths:
+      - /var/log/containers/*.log
     - exclude_lines:
       - ^DBG
       - ^INFO
@@ -40,10 +48,34 @@ spec:
           fields: ["_type","_score", "cloud.image.id", "container.id", "kubernetes.labels.pod-template-hash", "kubernetes.namespace_uid", "kubernetes.node.labels.eks_amazonaws_com/nodegroup-image", "kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId", "kubernetes.node.labels.k8s_io/cloud-provider-aws", "kubernetes.node.uid", "kubernetes.pod.uid", "kubernetes.replicaset.name"]
     filebeat.autodiscover:
       providers:
-      - type: kubernetes
-        node: ${NODE_NAME}
-        hints:
+      - hints:
           enabled: true
+        node: ${NODE_NAME}
+        type: kubernetes
+      templates:
+      - condition:
+          contains:
+            kubernetes.namespace: robotshop
+        config:
+        - paths:
+          - /var/log/containers/*.log
+          processors:
+          - decode_json_fields:
+              fields:
+              - message
+              overwrite_keys: true
+              target: json
+          type: container
+      - condition:
+          contains:
+            kubernetes.labels.app: dispatch
+        config:
+        - multiline.match: after
+          multiline.negate: true
+          multiline.pattern: ^[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.{4}
+          paths:
+          - /var/log/containers/*.log
+          type: container
     filebeat.modules:
     - module: nginx
       ingress_controller:
@@ -51,35 +83,6 @@ spec:
         input.type: container
         var.paths:
         - /var/log/containers/ingress-nginx-controller*.log
-    - module: aws
-      cloudtrail:
-        enabled: {{ .Values.filebeat.modules.aws_cloudtrail_enabled }}
-        var.bucket_arn: {{ .Values.filebeat.modules.cloudtrail_bucket_arn }}
-        var.bucket_list_interval: 300s
-        var.bucket_list_prefix: {{ .Values.filebeat.modules.cloudtrail_bucket_prefix }}
-        var.number_of_workers: 5
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
-      elb:
-        enabled: {{ .Values.filebeat.modules.aws_elb_enabled }}
-        var.bucket_arn: {{ .Values.filebeat.modules.elb_bucket_arn }}
-        var.bucket_list_interval: 300s
-        var.bucket_list_prefix: {{ .Values.filebeat.modules.elb_bucket_prefix }}
-        var.number_of_workers: 5
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
-      vpcflow:
-        enabled: {{ .Values.filebeat.modules.aws_vpc_flow_logs_enabled }}
-        var.bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}
-        var.bucket_list_interval: 300s
-        var.bucket_list_prefix: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_prefix }}
-        var.number_of_workers: 5
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
-      s3access:
-        enabled: {{ .Values.filebeat.modules.aws_s3access_enabled }}
-        var.bucket_arn: {{ .Values.filebeat.modules.s3access_bucket_arn }}
-        var.bucket_list_interval: 300s
-        var.bucket_list_prefix: {{ .Values.filebeat.modules.s3access_bucket_prefix }}
-        var.number_of_workers: 5
-        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
     - module: mongodb
       log:
         enabled: {{ .Values.filebeat.modules.mongodb_enabled }}
@@ -138,6 +141,9 @@ spec:
         {{- end }}
       username: {{ .Values.filebeat.username }}
       password: {{ .Values.filebeat.password }}
+      bulk_max_size: 2048
+      compression_level: 3
+      fields_under_root: true
     json.keys_under_root: true
     json.add_error_key: true
     json.message_key: log
@@ -200,4 +206,89 @@ spec:
         - name: ilm-configmap-volume
           configMap:
             name: ilmpolicy-config
-{{- end}}
+---
+
+{{- if .Values.filebeat.modules.aws_enabled }}
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: filebeat-aws
+  namespace: {{ .Values.namespace }}
+spec:
+  image: "docker.elastic.co/beats/filebeat:{{ .Values.version }}"
+  imagePullPolicy: "IfNotPresent"
+  replicas: 2
+  type: filebeat-aws
+  version: {{ .Values.version }}
+  elasticsearchRef:
+    name: elasticsearch
+  kibanaRef:
+    name: kibana
+  config:
+    filebeat.inputs:
+    - type: aws-s3
+      bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}
+      role_arn: {{ .Values.filebeat.modules.role_arn }}
+      number_of_workers: 5
+    filebeat.modules:
+    - module: aws
+      cloudtrail:
+        enabled: {{ .Values.filebeat.modules.aws_cloudtrail_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.cloudtrail_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.cloudtrail_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      elb:
+        enabled: {{ .Values.filebeat.modules.aws_elb_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.elb_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.elb_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      vpcflow:
+        enabled: {{ .Values.filebeat.modules.aws_vpc_flow_logs_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      s3access:
+        enabled: {{ .Values.filebeat.modules.aws_s3access_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.s3access_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.s3access_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+    output.elasticsearch:
+      username: {{ .Values.filebeat.username }}
+      password: {{ .Values.filebeat.password }}
+  deployment:
+    podTemplate:
+      spec:
+        replicas: 2
+        imagePullPolicy: "IfNotPresent"
+        serviceAccountName: filebeat
+        priorityClassName: filebeat-pod-critical
+        automountServiceAccountToken: true
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true # Allows to provide richer host metadata
+        containers:
+        - name: filebeat-aws
+          {{- with .Values.filebeat.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            runAsUser: 0
+            # If using Red Hat OpenShift uncomment this:
+            # privileged: true
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+---
+{{- end }}
+{{- end }}

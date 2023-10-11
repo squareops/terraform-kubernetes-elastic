@@ -142,6 +142,7 @@ No modules.
 | [helm_release.elastic_stack](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [helm_release.elasticsearch_exporter](https://registry.terraform.io/providers/hashicorp/helm/latest/docs/resources/release) | resource |
 | [kubernetes_namespace.elastic_system](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/namespace) | resource |
+| [null_resource.es_aws_secret](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [null_resource.es_secret](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [time_sleep.wait_60_sec](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [kubernetes_secret.eck_secret](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/data-sources/secret) | data source |
@@ -160,6 +161,7 @@ No modules.
 | <a name="input_aws_index_enabled"></a> [aws\_index\_enabled](#input\_aws\_index\_enabled) | AWS services index enabling | `bool` | `false` | no |
 | <a name="input_aws_input_type_key"></a> [aws\_input\_type\_key](#input\_aws\_input\_type\_key) | The key used to identify the AWS input type | `string` | `""` | no |
 | <a name="input_aws_input_type_value"></a> [aws\_input\_type\_value](#input\_aws\_input\_type\_value) | The value associated with the AWS input type | `string` | `""` | no |
+| <a name="input_aws_modules_enabled"></a> [aws\_modules\_enabled](#input\_aws\_modules\_enabled) | Enable or disable AWS Modules | `bool` | `false` | no |
 | <a name="input_aws_s3access_enabled"></a> [aws\_s3access\_enabled](#input\_aws\_s3access\_enabled) | Enable or disable AWS S3 Access | `bool` | `false` | no |
 | <a name="input_aws_vpc_flow_logs_enabled"></a> [aws\_vpc\_flow\_logs\_enabled](#input\_aws\_vpc\_flow\_logs\_enabled) | Enable or disable AWS VPC Flow Logs | `bool` | `false` | no |
 | <a name="input_chart_version"></a> [chart\_version](#input\_chart\_version) | Version of Helm chart to be used for deploying the ECK stack. | `string` | `"2.9.0"` | no |

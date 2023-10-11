@@ -11,15 +11,15 @@ locals {
 
 module "aws" {
   source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
-  cluster_name = "dev-skaf"
+  cluster_name = ""
 }
 
 module "eck" {
   source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  namespace = "elastic-system"
+  namespace = ""
   eck_config = {
     provider_type        = "aws"
-    hostname             = "eck.dev.skaf.squareops.in"
+    hostname             = "eck.dev.skaf.xxxxxx"
     eck_values           = file("./helm/eck.yaml")
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
@@ -42,7 +42,7 @@ module "eck" {
   # Multiple Indices
   application_index_enabled       = true
   aws_index_enabled               = false
-  database_mysql_index_enabled    = false
+  database_mysql_index_enabled    = true
   database_mongodb_index_enabled  = false
   database_redis_index_enabled    = false
   database_rabbitmq_index_enabled = false
@@ -65,21 +65,22 @@ module "eck" {
   aws_input_type_key   = "input.type"
   aws_input_type_value = "aws-s3"
   # Filebeat Modules
+  aws_modules_enabled              = true
   ingress_nginx_controller_enabled = true
   mongodb_enabled                  = true
   mysql_enabled                    = true
   postgresql_enabled               = false
   filebeat_role_arn                = module.aws.filebeat_role_arn
-  aws_cloudtrail_enabled           = false
+  aws_cloudtrail_enabled           = true
   cloudtrail_bucket_arn            = ""
   cloudtrail_bucket_prefix         = ""
   aws_elb_enabled                  = false
   elb_bucket_arn                   = ""
   elb_bucket_prefix                = ""
-  aws_vpc_flow_logs_enabled        = false
+  aws_vpc_flow_logs_enabled        = true
   vpc_flowlogs_bucket_arn          = ""
   vpc_flowlogs_bucket_prefix       = ""
-  aws_s3access_enabled             = false
+  aws_s3access_enabled             = true
   s3access_bucket_arn              = ""
   s3access_bucket_prefix           = ""
 }

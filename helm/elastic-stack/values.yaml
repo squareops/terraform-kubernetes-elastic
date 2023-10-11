@@ -88,6 +88,7 @@ filebeat:
     mysql_enabled: ${mysql_enabled}
     postgresql_enabled: ${postgresql_enabled}
     role_arn: ${filebeat_role_arn}
+    aws_enabled: ${aws_modules_enabled}
     aws_cloudtrail_enabled: ${aws_cloudtrail_enabled}
     cloudtrail_bucket_arn: ${cloudtrail_bucket_arn}
     cloudtrail_bucket_prefix: ${cloudtrail_bucket_prefix}

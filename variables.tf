@@ -197,6 +197,12 @@ variable "aws_s3access_enabled" {
   default     = false
 }
 
+variable "aws_modules_enabled" {
+  description = "Enable or disable AWS Modules"
+  type        = bool
+  default     = false
+}
+
 variable "elb_bucket_arn" {
   description = "The ARN of the ELB S3 bucket"
   type        = string
