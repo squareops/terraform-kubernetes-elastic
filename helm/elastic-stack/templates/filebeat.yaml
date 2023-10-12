@@ -12,32 +12,51 @@ spec:
   kibanaRef:
     name: kibana
   config:
-    filebeat.inputs:
-    - type: filestream
-      id: multiline-filter
-      enabled: true
-      multiline.match: after
-      multiline.negate: true
-      multiline.pattern:
-      - '^[[:space:]]+(at|\.{3})[[:space:]]+\b|^Caused by:'
-      - '\\$'
-      - '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
-      - '^\s'
-      paths:
+    filebeat.inputs:                                                                                                                                                                           
+    - enabled: true                                                                                                                                                                            
+      id: include-message                                                                                                                                                                      
+      parsers:                                                                                                                                                                                 
+        include_message:                                                                                                                                                                       
+          pattern:                                                                                                                                                                             
+          - ERROR                                                                                                                                                                              
+          - WARN                                                                                                                                                                               
+          - ERR                                                                                                                                                                                
+      paths:                                                                                                                                                                                   
+      - /var/log/containers/*.log                                                                                                                                                              
+      type: filestream                                                                                                                                                                         
+    - enabled: true                                                                                                                                                                            
+      id: container                                                                                                                                                                            
+      parsers:                                                                                                                                                                                 
+      - container:                                                                                                                                                                             
+          format: json-file                                                                                                                                                                    
+          stream: stderr                                                                                                                                                                       
+      paths:                                                                                                                                                                                   
+      - /var/log/containers/*.log                                                                                                                                                              
+      type: filestream                                                                                                                                                                         
+    - enabled: true                                                                                                                                                                            
+      id: multiline-filter                                                                                                                                                                     
+      multiline.match: after                                                                                                                                                                   
+      multiline.negate: true                                                                                                                                                                   
+      multiline.pattern:                                                                                                                                                                       
+      - '^[[:space:]]+(at|\.{3})[[:space:]]+\b|^Caused by:'                                                                                                                                    
+      - \\$                                                                                                                                                                                    
+      - ^\[[0-9]{4}-[0-9]{2}-[0-9]{2}                                                                                                                                                          
+      - ^\s                                                                                                                                                                                    
+      paths:                                                                                                                                                                                   
+      - /var/log/containers/*.log                                                                                                                                                              
+      type: filestream                                                                                                                                                                         
+    - exclude_lines:                                                                                                                                                                           
+      - DBG                                                                                                                                                                                    
+      - INFO                                                                                                                                                                                   
+      - DEBUG                                                                                                                                                                                  
+      include_lines:                                                                                                                                                                           
+      - ERROR                                                                                                                                                                                  
+      - ERR                                                                                                                                                                                    
+      - WARN                                                                                                                                                                                   
+      paths:                                                                                                                                                                                   
+      - /var/log/containers/*.log                                                                                                                                                              
+    - paths:                                                                                                                                                                                   
       - /var/log/containers/*.log
-    - exclude_lines:
-      - ^DBG
-      - ^INFO
-      - ^DEBUG
-      include_lines:
-      - ^ERROR
-      - ^ERR
-      - ^WARN
-      paths:
-      - /var/log/containers/*.log
-    - type: container
-      paths:
-        - /var/log/containers/*.log
       processors:
       - add_kubernetes_metadata:
           host: ${NODE_NAME}
@@ -46,6 +65,8 @@ spec:
               logs_path: "/var/log/containers/"
       - drop_fields:
           fields: ["_type","_score", "cloud.image.id", "container.id", "kubernetes.labels.pod-template-hash", "kubernetes.namespace_uid", "kubernetes.node.labels.eks_amazonaws_com/nodegroup-image", "kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId", "kubernetes.node.labels.k8s_io/cloud-provider-aws", "kubernetes.node.uid", "kubernetes.pod.uid", "kubernetes.replicaset.name"]
+      stream: stderr                                                                                                                                 
+      type: container
     filebeat.autodiscover:
       providers:
       - hints:
@@ -53,10 +74,7 @@ spec:
         node: ${NODE_NAME}
         type: kubernetes
       templates:
-      - condition:
-          contains:
-            kubernetes.namespace: robotshop
-        config:
+      - config:
         - paths:
           - /var/log/containers/*.log
           processors:
@@ -65,16 +83,6 @@ spec:
               - message
               overwrite_keys: true
               target: json
-          type: container
-      - condition:
-          contains:
-            kubernetes.labels.app: dispatch
-        config:
-        - multiline.match: after
-          multiline.negate: true
-          multiline.pattern: ^[0-9]{4}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}.{4}
-          paths:
-          - /var/log/containers/*.log
           type: container
     filebeat.modules:
     - module: nginx
@@ -225,11 +233,6 @@ spec:
   kibanaRef:
     name: kibana
   config:
-    filebeat.inputs:
-    - type: aws-s3
-      bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}
-      role_arn: {{ .Values.filebeat.modules.role_arn }}
-      number_of_workers: 5
     filebeat.modules:
     - module: aws
       cloudtrail:
@@ -263,6 +266,14 @@ spec:
     output.elasticsearch:
       username: {{ .Values.filebeat.username }}
       password: {{ .Values.filebeat.password }}
+    setup.ilm.enabled: false
+    setup.ilm.check_exists: false
+    setup.ilm.overwrite: true
+    setup.template.settings:
+      index.number_of_shards: 3
+      index.number_of_replicas: 1
+    processors:
+    - add_cloud_metadata: {}
   deployment:
     podTemplate:
       spec:
