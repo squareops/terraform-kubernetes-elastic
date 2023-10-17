@@ -144,7 +144,6 @@ spec:
         {{- end }}
       username: {{ .Values.filebeat.username }}
       password: {{ .Values.filebeat.password }}
-      bulk_max_size: 2048
       compression_level: 3
       fields_under_root: true
     json.keys_under_root: true
