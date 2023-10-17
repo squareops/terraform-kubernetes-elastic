@@ -12,61 +12,6 @@ spec:
   kibanaRef:
     name: kibana
   config:
-    filebeat.inputs:                                                                                                                                                                           
-    - enabled: true                                                                                                                                                                            
-      id: include-message                                                                                                                                                                      
-      parsers:                                                                                                                                                                                 
-        include_message:                                                                                                                                                                       
-          pattern:                                                                                                                                                                             
-          - ERROR                                                                                                                                                                              
-          - WARN                                                                                                                                                                               
-          - ERR                                                                                                                                                                                
-      paths:                                                                                                                                                                                   
-      - /var/log/containers/*.log                                                                                                                                                              
-      type: filestream                                                                                                                                                                         
-    - enabled: true                                                                                                                                                                            
-      id: container                                                                                                                                                                            
-      parsers:                                                                                                                                                                                 
-      - container:                                                                                                                                                                             
-          format: json-file                                                                                                                                                                    
-          stream: stderr                                                                                                                                                                       
-      paths:                                                                                                                                                                                   
-      - /var/log/containers/*.log                                                                                                                                                              
-      type: filestream                                                                                                                                                                         
-    - enabled: true                                                                                                                                                                            
-      id: multiline-filter                                                                                                                                                                     
-      multiline.match: after                                                                                                                                                                   
-      multiline.negate: true                                                                                                                                                                   
-      multiline.pattern:                                                                                                                                                                       
-      - '^[[:space:]]+(at|\.{3})[[:space:]]+\b|^Caused by:'                                                                                                                                    
-      - \\$                                                                                                                                                                                    
-      - ^\[[0-9]{4}-[0-9]{2}-[0-9]{2}                                                                                                                                                          
-      - ^\s                                                                                                                                                                                    
-      paths:                                                                                                                                                                                   
-      - /var/log/containers/*.log                                                                                                                                                              
-      type: filestream                                                                                                                                                                         
-    - exclude_lines:                                                                                                                                                                           
-      - DBG                                                                                                                                                                                    
-      - INFO                                                                                                                                                                                   
-      - DEBUG                                                                                                                                                                                  
-      include_lines:                                                                                                                                                                           
-      - ERROR                                                                                                                                                                                  
-      - ERR                                                                                                                                                                                    
-      - WARN                                                                                                                                                                                   
-      paths:                                                                                                                                                                                   
-      - /var/log/containers/*.log                                                                                                                                                              
-    - paths:                                                                                                                                                                                   
-      - /var/log/containers/*.log
-      processors:
-      - add_kubernetes_metadata:
-          host: ${NODE_NAME}
-          matchers:
-          - logs_path:
-              logs_path: "/var/log/containers/"
-      - drop_fields:
-          fields: ["_type","_score", "cloud.image.id", "container.id", "kubernetes.labels.pod-template-hash", "kubernetes.namespace_uid", "kubernetes.node.labels.eks_amazonaws_com/nodegroup-image", "kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId", "kubernetes.node.labels.k8s_io/cloud-provider-aws", "kubernetes.node.uid", "kubernetes.pod.uid", "kubernetes.replicaset.name"]
-      stream: stderr                                                                                                                                 
-      type: container
     filebeat.autodiscover:
       providers:
       - hints:
@@ -84,6 +29,56 @@ spec:
               overwrite_keys: true
               target: json
           type: container
+    filebeat.inputs:
+    - enabled: true
+      id: container
+      parsers:
+      - container:
+          format: json-file
+          stream: stderr
+      paths:
+      - /var/log/containers/*.log
+      type: filestream
+    - paths:
+      - /var/log/contianers/cart*.log
+      - /var/log/contianers/dispatch*.log
+      - /var/log/contianers/pay*.log
+      - /var/log/contianers/user*.log
+      - /var/log/contianers/catal*.log
+      - /var/log/containers/ingress-nginx-controller*.log
+      - /var/log/containers/ist*.log
+      - /var/log/containers/mysql*.log
+      - /var/log/containers/redis*.log
+      - /var/log/containers/mongo*.log
+      - /var/log/containers/jenkins*.log
+      - /var/log/containers/argo*.log
+      - /var/log/containers/sonar*.log
+      - /var/log/containers/kafka*.log
+      processors:
+      - add_kubernetes_metadata:
+          host: ${NODE_NAME}
+          matchers:
+          - logs_path:
+              logs_path: /var/log/containers/
+      - drop_fields:
+          fields:
+          - agent.id
+          - agent.name
+          - agent.ephemeral_id
+          - _type
+          - _score
+          - cloud.image.id
+          - container.id
+          - kubernetes.labels.pod-template-hash
+          - kubernetes.namespace_uid
+          - kubernetes.node.labels.eks_amazonaws_com/nodegroup-image
+          - kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId
+          - kubernetes.node.labels.k8s_io/cloud-provider-aws
+          - kubernetes.node.uid
+          - kubernetes.pod.uid
+          - kubernetes.replicaset.name
+      stream: stderr
+      type: container
     filebeat.modules:
     - module: nginx
       ingress_controller:
