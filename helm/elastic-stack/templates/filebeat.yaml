@@ -158,8 +158,6 @@ spec:
       index.number_of_shards: 3
       index.number_of_replicas: 1
     logging.metrics.enabled: false
-    processors:
-    - add_cloud_metadata: {}
   daemonSet:
     podTemplate:
       spec:
