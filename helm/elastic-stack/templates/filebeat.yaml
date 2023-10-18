@@ -30,30 +30,32 @@ spec:
               target: json
           type: container
     filebeat.inputs:
-    - enabled: true
+    - enabled: false
       id: container
       parsers:
       - container:
           format: json-file
-          stream: stderr
+          stream: all
       paths:
       - /var/log/containers/*.log
       type: filestream
     - paths:
-      - /var/log/contianers/cart*.log
-      - /var/log/contianers/dispatch*.log
-      - /var/log/contianers/pay*.log
-      - /var/log/contianers/user*.log
-      - /var/log/contianers/catal*.log
-      - /var/log/containers/ingress-nginx-controller*.log
-      - /var/log/containers/ist*.log
-      - /var/log/containers/mysql*.log
-      - /var/log/containers/redis*.log
-      - /var/log/containers/mongo*.log
-      - /var/log/containers/jenkins*.log
-      - /var/log/containers/argo*.log
-      - /var/log/containers/sonar*.log
-      - /var/log/containers/kafka*.log
+      - /var/log/containers/cart*.log                                                                                                            
+      - /var/log/containers/dispatch*.log                                                                                                        
+      - /var/log/containers/pay*.log                                                                                                             
+      - /var/log/containers/user*.log                                                                                                            
+      - /var/log/containers/catal*.log                                                                                                           
+      - /var/log/containers/web*.log                                                                                                             
+      - /var/log/containers/ship*.log                                                                                                            
+      - /var/log/containers/ingress-nginx-controller*.log                                                                                        
+      - /var/log/containers/ist*.log                                                                                                             
+      - /var/log/containers/mysql*.log                                                                                                           
+      - /var/log/containers/redis*.log                                                                                                           
+      - /var/log/containers/mongo*.log                                                                                                           
+      - /var/log/containers/jenkins*.log                                                                                                         
+      - /var/log/containers/argo*.log                                                                                                            
+      - /var/log/containers/sonar*.log                                                                                                           
+      - /var/log/containers/rabbit*.log
       processors:
       - add_kubernetes_metadata:
           host: ${NODE_NAME}
@@ -62,22 +64,22 @@ spec:
               logs_path: /var/log/containers/
       - drop_fields:
           fields:
-          - agent.id
-          - agent.name
-          - agent.ephemeral_id
-          - _type
-          - _score
-          - cloud.image.id
-          - container.id
-          - kubernetes.labels.pod-template-hash
-          - kubernetes.namespace_uid
-          - kubernetes.node.labels.eks_amazonaws_com/nodegroup-image
-          - kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId
-          - kubernetes.node.labels.k8s_io/cloud-provider-aws
-          - kubernetes.node.uid
-          - kubernetes.pod.uid
+          - agent.id                                                                                                                             
+          - agent.name                                                                                                                           
+          - agent.ephemeral_id                                                                                                                   
+          - _type                                                                                                                                
+          - _score                                                                                                                               
+          - cloud.image.id                                                                                                                       
+          - container.id                                                                                                                         
+          - kubernetes.labels.pod-template-hash                                                                                                  
+          - kubernetes.namespace_uid                                                                                                             
+          - kubernetes.node.labels.eks_amazonaws_com/nodegroup-image                                                                             
+          - kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId                                                                      
+          - kubernetes.node.labels.k8s_io/cloud-provider-aws                                                                                     
+          - kubernetes.node.uid                                                                                                                  
+          - kubernetes.pod.uid                                                                                                                   
           - kubernetes.replicaset.name
-      stream: stderr
+      stream: all
       type: container
     filebeat.modules:
     - module: nginx
@@ -144,8 +146,6 @@ spec:
         {{- end }}
       username: {{ .Values.filebeat.username }}
       password: {{ .Values.filebeat.password }}
-      compression_level: 3
-      fields_under_root: true
     json.keys_under_root: true
     json.add_error_key: true
     json.message_key: log
@@ -264,6 +264,7 @@ spec:
     setup.template.settings:
       index.number_of_shards: 3
       index.number_of_replicas: 1
+    logging.metrics.enabled: false
     processors:
     - add_cloud_metadata: {}
   deployment:
