@@ -68,12 +68,54 @@ affinity:
 
 filebeat:
   enabled: true
+  application_index_name: ${application_index_name}
+  application_input_type_key: ${application_input_type_key}
+  application_input_type_value: ${application_input_type_value}
+  database_index_name: ${database_index_name}
+  mongodb_input_type_key: ${mongodb_input_type_key}
+  mongodb_input_type_value: ${mongodb_input_type_value}
+  mysql_input_type_key: ${mysql_input_type_key}
+  mysql_input_type_value: ${mysql_input_type_value}
+  redis_input_type_key: ${redis_input_type_key}
+  redis_input_type_value: ${redis_input_type_value}
+  rabbitmq_input_type_key: ${rabbitmq_input_type_key}
+  rabbitmq_input_type_value: ${rabbitmq_input_type_value}
+  aws_input_type_key: ${aws_input_type_key}
+  aws_input_type_value: ${aws_input_type_value}
+  modules:
+    ingress_nginx_controller_enabled: ${ingress_nginx_controller_enabled}
+    mongodb_enabled: ${mongodb_enabled}
+    mysql_enabled: ${mysql_enabled}
+    postgresql_enabled: ${postgresql_enabled}
+    role_arn: ${filebeat_role_arn}
+    aws_enabled: ${aws_modules_enabled}
+    aws_cloudtrail_enabled: ${aws_cloudtrail_enabled}
+    cloudtrail_bucket_arn: ${cloudtrail_bucket_arn}
+    cloudtrail_bucket_prefix: ${cloudtrail_bucket_prefix}
+    aws_elb_enabled: ${aws_elb_enabled}
+    elb_bucket_arn: ${elb_bucket_arn}
+    elb_bucket_prefix: ${elb_bucket_prefix}
+    aws_vpc_flow_logs_enabled: ${aws_vpc_flow_logs_enabled}
+    vpc_flowlogs_bucket_arn: ${vpc_flowlogs_bucket_arn}
+    vpc_flowlogs_bucket_prefix: ${vpc_flowlogs_bucket_prefix}
+    aws_s3access_enabled: ${aws_s3access_enabled}
+    s3access_bucket_arn: ${s3access_bucket_arn}
+    s3access_bucket_prefix: ${s3access_bucket_prefix}
+    application_index_enabled: ${application_index_enabled}
+    database_mongodb_index_enabled: ${database_mongodb_index_enabled}
+    database_mysql_index_enabled: ${database_mysql_index_enabled}
+    database_redis_index_enabled: ${database_redis_index_enabled}
+    database_rabbitmq_index_enabled: ${database_rabbitmq_index_enabled}
+    database_postgres_index_enabled: ${database_postgres_index_enabled}
+    aws_index_enabled: ${aws_index_enabled}
+  username: ${eckuser}
+  password: ${eckpassword}
   resources:
     requests:
       memory: 100Mi
       cpu: 50m
     limits:
-      memory: 200Mi
+      memory: 500Mi
       cpu: 200m
 
 s3:

@@ -1,20 +1,139 @@
 rules:
-  slack_alert: |-
+  es_400: |-
     ---
-    name: elast_alert
+    name: elast_alert_400
     type: frequency
     index: filebeat-*
-    num_events: 5
+    num_events: 1
     timeframe:
       minutes: 5
     filter:
     - query:
         query_string:
-          query: "http.response.status_code : 404"
+          query: "http.response.status_code : 400"
     alert:
     - "slack"
     slack:
-    slack_webhook_url: https://hooks.slack.com/services/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
+    slack_webhook_url: ""
+
+  es_401: |-
+    ---
+    name: elast_alert_401
+    type: frequency
+    index: filebeat-*
+    num_events: 1
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 401"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: ""
+
+  es_402: |-
+    ---
+    name: elast_alert_402
+    type: frequency
+    index: filebeat-*
+    num_events: 1
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 402"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: ""
+
+  es_403: |-
+    ---
+    name: elast_alert_403
+    type: frequency
+    index: filebeat-*
+    num_events: 1
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 403"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: ""
+
+  es_500: |-
+    ---
+    name: elast_alert_500
+    type: frequency
+    index: filebeat-*
+    num_events: 1
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 500"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: ""
+
+  es_501: |-
+    ---
+    name: elast_alert_501
+    type: frequency
+    index: filebeat-*
+    num_events: 1
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 501"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: ""
+
+  es_502: |-
+    ---
+    name: elast_alert_502
+    type: frequency
+    index: filebeat-*
+    num_events: 1
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 502"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: ""
+
+  es_503: |-
+    ---
+    name: elast_alert_503
+    type: frequency
+    index: filebeat-*
+    num_events: 1
+    timeframe:
+      minutes: 5
+    filter:
+    - query:
+        query_string:
+          query: "http.response.status_code : 503"
+    alert:
+    - "slack"
+    slack:
+    slack_webhook_url: ""
 
 affinity:
   nodeAffinity:

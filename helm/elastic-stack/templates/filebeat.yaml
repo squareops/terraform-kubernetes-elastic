@@ -12,45 +12,151 @@ spec:
   kibanaRef:
     name: kibana
   config:
+    filebeat.autodiscover:
+      providers:
+      - hints:
+          enabled: true
+        node: ${NODE_NAME}
+        type: kubernetes
+      templates:
+      - config:
+        - paths:
+          - /var/log/containers/*.log
+          processors:
+          - decode_json_fields:
+              fields:
+              - message
+              overwrite_keys: true
+              target: json
+          type: container
     filebeat.inputs:
-    - type: container
+    - enabled: false
+      id: container
+      parsers:
+      - container:
+          format: json-file
+          stream: all
       paths:
-        - /var/log/containers/*.log
+      - /var/log/containers/*.log
+      type: filestream
+    - paths:
+      - /var/log/containers/cart*.log                                                                                                            
+      - /var/log/containers/dispatch*.log                                                                                                        
+      - /var/log/containers/pay*.log                                                                                                             
+      - /var/log/containers/user*.log                                                                                                            
+      - /var/log/containers/catal*.log                                                                                                           
+      - /var/log/containers/web*.log                                                                                                             
+      - /var/log/containers/ship*.log                                                                                                            
+      - /var/log/containers/ingress-nginx-controller*.log                                                                                        
+      - /var/log/containers/ist*.log                                                                                                             
+      - /var/log/containers/mysql*.log                                                                                                           
+      - /var/log/containers/redis*.log                                                                                                           
+      - /var/log/containers/mongo*.log                                                                                                           
+      - /var/log/containers/jenkins*.log                                                                                                         
+      - /var/log/containers/argo*.log                                                                                                            
+      - /var/log/containers/sonar*.log                                                                                                           
+      - /var/log/containers/rabbit*.log
       processors:
       - add_kubernetes_metadata:
           host: ${NODE_NAME}
           matchers:
           - logs_path:
-              logs_path: "/var/log/containers/"
-    filebeat.autodiscover:
-      providers:
-      - type: kubernetes
-        node: ${NODE_NAME}
-        hints:
-          enabled: true
+              logs_path: /var/log/containers/
+      - drop_fields:
+          fields:
+          - agent.id                                                                                                                             
+          - agent.name                                                                                                                           
+          - agent.ephemeral_id                                                                                                                   
+          - _type                                                                                                                                
+          - _score                                                                                                                               
+          - cloud.image.id                                                                                                                       
+          - container.id                                                                                                                         
+          - kubernetes.labels.pod-template-hash                                                                                                  
+          - kubernetes.namespace_uid                                                                                                             
+          - kubernetes.node.labels.eks_amazonaws_com/nodegroup-image                                                                             
+          - kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId                                                                      
+          - kubernetes.node.labels.k8s_io/cloud-provider-aws                                                                                     
+          - kubernetes.node.uid                                                                                                                  
+          - kubernetes.pod.uid                                                                                                                   
+          - kubernetes.replicaset.name
+      stream: all
+      type: container
     filebeat.modules:
-    - ingress_controller:
-        enabled: true
+    - module: nginx
+      ingress_controller:
+        enabled: {{ .Values.filebeat.modules.ingress_nginx_controller_enabled }}
         input.type: container
         var.paths:
         - /var/log/containers/ingress-nginx-controller*.log
-      module: nginx
-    setup.ilm.enabled: true
+    - module: mongodb
+      log:
+        enabled: {{ .Values.filebeat.modules.mongodb_enabled }}
+        var.paths:
+        - /var/log/containers/mongo*.log
+    - module: mysql
+      error:
+        enabled: {{ .Values.filebeat.modules.mysql_enabled }}
+        var.paths:
+        - /var/log/pods/mysql*/mysql/*.log
+      slowlog:
+        enabled: {{ .Values.filebeat.modules.mysql_enabled }}
+        var.paths:
+        - /var/log/pods/mysql*/slow-log/*.log
+    - module: postgresql
+      log:
+        enabled: {{ .Values.filebeat.modules.postgresql_enabled }}
+        var.paths:
+        - /var/log/containers/postgres*.log
+    output.elasticsearch:
+      indices:
+        {{- if .Values.filebeat.modules.application_index_enabled }}
+        - index: {{ .Values.filebeat.application_index_name }}-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.application_input_type_key }}: {{ .Values.filebeat.application_input_type_value }}
+        {{- end }}
+        {{- if .Values.filebeat.modules.database_mongodb_index_enabled }}
+        - index: {{ .Values.filebeat.database_index_name }}-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.mongodb_input_type_key }}: {{ .Values.filebeat.mongodb_input_type_value }}
+        {{- end }}
+        {{- if .Values.filebeat.modules.database_mysql_index_enabled }}
+        - index: {{ .Values.filebeat.database_index_name }}-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.mysql_input_type_key }}: {{ .Values.filebeat.mysql_input_type_value }}
+        {{- end }}
+        {{- if .Values.filebeat.modules.database_redis_index_enabled }}
+        - index: {{ .Values.filebeat.database_index_name }}-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.redis_input_type_key }}: {{ .Values.filebeat.redis_input_type_value }}
+        {{- end }}
+        {{- if .Values.filebeat.modules.database_rabbitmq_index_enabled }}
+        - index: {{ .Values.filebeat.database_index_name }}-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.rabbitmq_input_type_key }}: {{ .Values.filebeat.rabbitmq_input_type_value }}
+        {{- end }}
+        {{- if .Values.filebeat.modules.database_postgres_index_enabled }}
+        - index: {{ .Values.filebeat.database_index_name }}-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.postgres_input_type_key }}: {{ .Values.filebeat.postgres_input_type_value }}
+        {{- end }}
+        {{- if .Values.filebeat.modules.aws_index_enabled }}
+        - index: aws-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.aws_input_type_key }}: {{ .Values.filebeat.aws_input_type_value }}
+        {{- end }}
+      username: {{ .Values.filebeat.username }}
+      password: {{ .Values.filebeat.password }}
+    json.keys_under_root: true
+    json.add_error_key: true
+    json.message_key: log
+    setup.ilm.enabled: false
     setup.ilm.policy_name: "custom-ilm"
     setup.ilm.policy_file: "/usr/share/filebeat/ilm-policy.json"
-    setup.ilm.check_exists: true
+    setup.ilm.check_exists: false
     setup.ilm.overwrite: true
     setup.template.settings:
-      index.number_of_shards: 2
+      index.number_of_shards: 3
       index.number_of_replicas: 1
-    processors:
-    - add_cloud_metadata: {}
-    - add_host_metadata: {}
-    - drop_fields:
-        fields:
-        - agent
-        - ecs
-        - host
     logging.metrics.enabled: false
   daemonSet:
     podTemplate:
@@ -70,7 +176,7 @@ spec:
           securityContext:
             runAsUser: 0
             # If using Red Hat OpenShift uncomment this:
-            #privileged: true
+            # privileged: true
           volumeMounts:
           - name: varlogcontainers
             mountPath: /var/log/containers
@@ -100,4 +206,93 @@ spec:
         - name: ilm-configmap-volume
           configMap:
             name: ilmpolicy-config
-{{- end}}
+---
+
+{{- if .Values.filebeat.modules.aws_enabled }}
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: filebeat-aws
+  namespace: {{ .Values.namespace }}
+spec:
+  image: "docker.elastic.co/beats/filebeat:{{ .Values.version }}"
+  imagePullPolicy: "IfNotPresent"
+  replicas: 2
+  type: filebeat-aws
+  version: {{ .Values.version }}
+  elasticsearchRef:
+    name: elasticsearch
+  kibanaRef:
+    name: kibana
+  config:
+    filebeat.modules:
+    - module: aws
+      cloudtrail:
+        enabled: {{ .Values.filebeat.modules.aws_cloudtrail_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.cloudtrail_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.cloudtrail_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      elb:
+        enabled: {{ .Values.filebeat.modules.aws_elb_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.elb_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.elb_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      vpcflow:
+        enabled: {{ .Values.filebeat.modules.aws_vpc_flow_logs_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.vpc_flowlogs_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+      s3access:
+        enabled: {{ .Values.filebeat.modules.aws_s3access_enabled }}
+        var.bucket_arn: {{ .Values.filebeat.modules.s3access_bucket_arn }}
+        var.bucket_list_interval: 300s
+        var.bucket_list_prefix: {{ .Values.filebeat.modules.s3access_bucket_prefix }}
+        var.number_of_workers: 5
+        var.role_arn: {{ .Values.filebeat.modules.role_arn }}
+    output.elasticsearch:
+      username: {{ .Values.filebeat.username }}
+      password: {{ .Values.filebeat.password }}
+    setup.ilm.enabled: false
+    setup.ilm.check_exists: false
+    setup.ilm.overwrite: true
+    setup.template.settings:
+      index.number_of_shards: 3
+      index.number_of_replicas: 1
+    logging.metrics.enabled: false
+    processors:
+    - add_cloud_metadata: {}
+  deployment:
+    podTemplate:
+      spec:
+        replicas: 2
+        imagePullPolicy: "IfNotPresent"
+        serviceAccountName: filebeat
+        priorityClassName: filebeat-pod-critical
+        automountServiceAccountToken: true
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true # Allows to provide richer host metadata
+        containers:
+        - name: filebeat-aws
+          {{- with .Values.filebeat.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            runAsUser: 0
+            # If using Red Hat OpenShift uncomment this:
+            # privileged: true
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+---
+{{- end }}
+{{- end }}
