@@ -40,22 +40,35 @@ spec:
       - /var/log/containers/*.log
       type: filestream
     - paths:
-      - /var/log/containers/cart*.log                                                                                                            
-      - /var/log/containers/dispatch*.log                                                                                                        
-      - /var/log/containers/pay*.log                                                                                                             
-      - /var/log/containers/user*.log                                                                                                            
-      - /var/log/containers/catal*.log                                                                                                           
-      - /var/log/containers/web*.log                                                                                                             
-      - /var/log/containers/ship*.log                                                                                                            
-      - /var/log/containers/ingress-nginx-controller*.log                                                                                        
-      - /var/log/containers/ist*.log                                                                                                             
-      - /var/log/containers/mysql*.log                                                                                                           
-      - /var/log/containers/redis*.log                                                                                                           
-      - /var/log/containers/mongo*.log                                                                                                           
-      - /var/log/containers/jenkins*.log                                                                                                         
-      - /var/log/containers/argo*.log                                                                                                            
-      - /var/log/containers/sonar*.log                                                                                                           
-      - /var/log/containers/rabbit*.log
+      - /var/log/containers/*.log
+      exclude_files:
+      - /var/log/containers/external-secrets*.log
+      - /var/log/containers/karpenter*.log
+      - /var/log/containers/keda*.log
+      - /var/log/containers/aws-load*.log
+      - /var/log/containers/aws-node*.log
+      - /var/log/containers/cluster-autoscaler*.log
+      - /var/log/containers/coredns*.log
+      - /var/log/containers/ebs-csi*.log
+      - /var/log/containers/efs-csi*.log
+      - /var/log/containers/kube-proxy*.log
+      - /var/log/containers/metrics-server*.log
+      - /var/log/containers/reloader*.log
+      - /var/log/containers/vertical-pod*.log
+      - /var/log/containers/kubeclarity*.log
+      - /var/log/containers/cost-analyzer*.log
+      - /var/log/containers/alertmanager*.log
+      - /var/log/containers/blackbox-exporter*.log
+      - /var/log/containers/ethtool*.log
+      - /var/log/containers/grafana*.log
+      - /var/log/containers/loki*.log
+      - /var/log/containers/prometheus*.log
+      - /var/log/containers/velero*.log
+      - /var/log/containers/apm*.log
+      - /var/log/containers/elastalert*.log
+      - /var/log/containers/filebeat*.log
+      - /var/log/containers/elasticsearch*.log
+      - /var/log/containers/elastic*.log
       processors:
       - add_kubernetes_metadata:
           host: ${NODE_NAME}
@@ -64,20 +77,20 @@ spec:
               logs_path: /var/log/containers/
       - drop_fields:
           fields:
-          - agent.id                                                                                                                             
-          - agent.name                                                                                                                           
-          - agent.ephemeral_id                                                                                                                   
-          - _type                                                                                                                                
-          - _score                                                                                                                               
-          - cloud.image.id                                                                                                                       
-          - container.id                                                                                                                         
-          - kubernetes.labels.pod-template-hash                                                                                                  
-          - kubernetes.namespace_uid                                                                                                             
-          - kubernetes.node.labels.eks_amazonaws_com/nodegroup-image                                                                             
-          - kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId                                                                      
-          - kubernetes.node.labels.k8s_io/cloud-provider-aws                                                                                     
-          - kubernetes.node.uid                                                                                                                  
-          - kubernetes.pod.uid                                                                                                                   
+          - agent.id
+          - agent.name
+          - agent.ephemeral_id
+          - _type
+          - _score
+          - cloud.image.id
+          - container.id
+          - kubernetes.labels.pod-template-hash
+          - kubernetes.namespace_uid
+          - kubernetes.node.labels.eks_amazonaws_com/nodegroup-image
+          - kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId
+          - kubernetes.node.labels.k8s_io/cloud-provider-aws
+          - kubernetes.node.uid
+          - kubernetes.pod.uid
           - kubernetes.replicaset.name
       stream: all
       type: container
@@ -143,6 +156,11 @@ spec:
         - index: aws-%{+yyyy.MM.dd}
           when.contains:
             {{ .Values.filebeat.aws_input_type_key }}: {{ .Values.filebeat.aws_input_type_value }}
+        {{- end }}
+        {{- if .Values.filebeat.custom_index_enabled }}
+        - index: {{ .Values.filebeat.custom_index_name }}-%{+yyyy.MM.dd}
+          when.contains:
+            {{ .Values.filebeat.custom_input_type_key }}: {{ .Values.filebeat.custom_input_type_value }}
         {{- end }}
       username: {{ .Values.filebeat.username }}
       password: {{ .Values.filebeat.password }}
