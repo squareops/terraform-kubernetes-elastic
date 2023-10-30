@@ -80,6 +80,12 @@ resource "helm_release" "elastic_stack" {
       database_postgres_index_enabled  = var.database_postgres_index_enabled
       database_mongodb_index_enabled   = var.database_mongodb_index_enabled
       database_mysql_index_enabled     = var.database_mysql_index_enabled
+      postgres_input_type_key          = var.postgres_input_type_key
+      postgres_input_type_value        = var.postgres_input_type_value
+      custom_index_enabled             = var.custom_index_enabled
+      custom_index_name                = var.custom_index_name
+      custom_input_type_key            = var.custom_input_type_key
+      custom_input_type_value          = var.custom_input_type_value
       eckuser                          = "elastic"
       eckpassword                      = ""
     }),

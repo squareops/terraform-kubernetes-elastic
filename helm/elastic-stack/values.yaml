@@ -61,7 +61,7 @@ affinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       nodeSelectorTerms:
       - matchExpressions:
-        - key: "Monitor-Services"
+        - key: "Infra-Services"
           operator: In
           values:
           - "true"
@@ -82,6 +82,12 @@ filebeat:
   rabbitmq_input_type_value: ${rabbitmq_input_type_value}
   aws_input_type_key: ${aws_input_type_key}
   aws_input_type_value: ${aws_input_type_value}
+  custom_index_enabled: ${custom_index_enabled}
+  custom_index_name: ${custom_index_name}
+  custom_input_type_key: ${custom_input_type_key}
+  custom_input_type_value: ${custom_input_type_value}
+  postgres_input_type_key: ${postgres_input_type_key}
+  postgres_input_type_value: ${postgres_input_type_key}
   modules:
     ingress_nginx_controller_enabled: ${ingress_nginx_controller_enabled}
     mongodb_enabled: ${mongodb_enabled}

@@ -61,6 +61,10 @@ module "eck" {
   rabbitmq_input_type_value       = "rabbitmq"
   postgres_input_type_key         = "kubernetes.namespace"
   postgres_input_type_value       = "postgres"
+  custom_index_enabled            = true
+  custom_index_name               = "mongo"
+  custom_input_type_key           = "kubernetes.namespace"
+  custom_input_type_value         = "ingress-nginx"
   # Note: If you enabled "aws" index, you won't be able to visualize AWS modules kibana dashboards.
   aws_input_type_key   = "input.type"
   aws_input_type_value = "aws-s3"
