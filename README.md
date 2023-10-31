@@ -168,6 +168,10 @@ No modules.
 | <a name="input_cloudtrail_bucket_arn"></a> [cloudtrail\_bucket\_arn](#input\_cloudtrail\_bucket\_arn) | The ARN of the CloudWatch S3 bucket | `string` | `""` | no |
 | <a name="input_cloudtrail_bucket_prefix"></a> [cloudtrail\_bucket\_prefix](#input\_cloudtrail\_bucket\_prefix) | The prefix for objects in the CloudWatch S3 bucket | `string` | `""` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster to which the ECK stack should be deployed. | `string` | `""` | no |
+| <a name="input_custom_index_enabled"></a> [custom\_index\_enabled](#input\_custom\_index\_enabled) | Custom index enabling | `bool` | `false` | no |
+| <a name="input_custom_index_name"></a> [custom\_index\_name](#input\_custom\_index\_name) | Custom index name | `string` | `""` | no |
+| <a name="input_custom_input_type_key"></a> [custom\_input\_type\_key](#input\_custom\_input\_type\_key) | Custom index key name | `string` | `""` | no |
+| <a name="input_custom_input_type_value"></a> [custom\_input\_type\_value](#input\_custom\_input\_type\_value) | Custom index value name | `string` | `""` | no |
 | <a name="input_database_index_name"></a> [database\_index\_name](#input\_database\_index\_name) | The index name for the database logs | `string` | `""` | no |
 | <a name="input_database_mongodb_index_enabled"></a> [database\_mongodb\_index\_enabled](#input\_database\_mongodb\_index\_enabled) | Database mongodb index enabling | `bool` | `false` | no |
 | <a name="input_database_mysql_index_enabled"></a> [database\_mysql\_index\_enabled](#input\_database\_mysql\_index\_enabled) | MYSQL index enabling | `bool` | `false` | no |
