@@ -328,3 +328,27 @@ variable "application_index_enabled" {
   default     = false
   description = "Application index enabling"
 }
+
+variable "custom_index_enabled" {
+  type        = bool
+  default     = false
+  description = "Custom index enabling"
+}
+
+variable "custom_index_name" {
+  type        = string
+  default     = ""
+  description = "Custom index name"
+}
+
+variable "custom_input_type_key" {
+  type        = string
+  default     = ""
+  description = "Custom index key name"
+}
+
+variable "custom_input_type_value" {
+  type        = string
+  default     = ""
+  description = "Custom index value name"
+}
