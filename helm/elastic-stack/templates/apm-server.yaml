@@ -10,3 +10,9 @@ spec:
     name: elasticsearch
   kibanaRef:
     name: kibana
+  podTemplate:
+    spec:
+  {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 10 }}
+  {{- end }}
