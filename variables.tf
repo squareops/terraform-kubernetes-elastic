@@ -13,6 +13,7 @@ variable "eck_config" {
     data_hot_node_size   = "20Gi"
     data_warm_node_size  = "20Gi"
     eck_values           = ""
+    operator_values = ""
     eckuser              = "elastic"
     eckpassword          = ""
     namespace            = "elastic-system"
