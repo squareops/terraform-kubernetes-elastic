@@ -14,6 +14,10 @@ resource "helm_release" "eck_operator" {
   timeout    = 600
   namespace  = var.namespace
   repository = "https://helm.elastic.co"
+  values = [
+    file("${path.module}/helm/operator/operator.yaml"),
+    var.eck_config.operator_values
+  ]
 }
 
 

@@ -21,6 +21,7 @@ module "eck" {
     provider_type        = "aws"
     hostname             = "eck.dev.skaf.xxxxxx"
     eck_values           = file("./helm/eck.yaml")
+    operator_values      = file("./helm/operator.yaml")
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
