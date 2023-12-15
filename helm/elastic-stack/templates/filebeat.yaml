@@ -70,6 +70,10 @@ spec:
       - /var/log/containers/elasticsearch*.log
       - /var/log/containers/elastic*.log
       processors:
+      - drop_event:
+          when:
+            regexp:
+              log.file.path: grafana.*\.log|prometheus.*\.log|apm.*\.log|filebeat.*\.log|elast.*\.log|cluster.*\.log|kibana.*\.log|vertical.*\.log|external.*\.log|defectdojo.*\.log|alertmanager.*\.log|velero.*\.log|blackbox.*\.log|cost.*\.log|kube.*\.log|vertical.*\.log|reloader.*\.log|metrics.*\.log|efs.*\.log|ebs.*\.log|aws.*\.log|keda.*\.log|sonarqube.*\.log|coredns.*\.log|jenkins.*\.log|istio.*\.log|cert.*\.log|argo.*\.log|elastic.*\.log|karpenter.*\.log|ingress-nginx.*\.log
       - add_kubernetes_metadata:
           host: ${NODE_NAME}
           matchers:
@@ -89,6 +93,25 @@ spec:
           - kubernetes.node.labels.eks_amazonaws_com/nodegroup-image
           - kubernetes.node.labels.eks_amazonaws_com/sourceLaunchTemplateId
           - kubernetes.node.labels.k8s_io/cloud-provider-aws
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-hypervisor
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-generation
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-family
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-cpu
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-category
+          - kubernetes.node.labels.beta_kubernetes_io/os
+          - kubernetes.node.labels.beta_kubernetes_io/arch
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-memory
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-pods
+          - kubernetes.node.labels.karpenter_k8s_aws/instance-size
+          - kubernetes.node.labels.karpenter_sh/capacity-type
+          - kubernetes.node.labels.karpenter_sh/initialized
+          - kubernetes.node.labels.kubernetes_io/arch
+          - kubernetes.node.labels.kubernetes_io/os
+          - kubernetes.node.labels.node_kubernetes_io/instance-type
+          - kubernetes.node.labels.topology_ebs_csi_aws_com/zone
+          - kubernetes.node.labels.topology_kubernetes_io/region
+          - kubernetes.node.labels.topology_kubernetes_io/zone
+          - kubernetes.labels.controller-uid
           - kubernetes.node.uid
           - kubernetes.pod.uid
           - kubernetes.replicaset.name
@@ -121,6 +144,7 @@ spec:
         var.paths:
         - /var/log/containers/postgres*.log
     output.elasticsearch:
+      index: filebeat-%{[agent.version]}-%{+yyyy.MM.dd}
       indices:
         {{- if .Values.filebeat.modules.application_index_enabled }}
         - index: {{ .Values.filebeat.application_index_name }}-%{+yyyy.MM.dd}
@@ -170,8 +194,8 @@ spec:
     setup.ilm.enabled: false
     setup.ilm.policy_name: "custom-ilm"
     setup.ilm.policy_file: "/usr/share/filebeat/ilm-policy.json"
-    setup.ilm.check_exists: false
-    setup.ilm.overwrite: true
+    setup.ilm.check_exists: true
+    setup.ilm.overwrite: false
     setup.template.settings:
       index.number_of_shards: 3
       index.number_of_replicas: 1
