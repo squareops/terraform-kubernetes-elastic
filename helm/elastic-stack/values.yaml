@@ -128,4 +128,4 @@ s3:
   role_arn: "${s3_role_arn}"
 
 # By Default ECK automatically sets Heap size based on the node on which ES is running. Override the default behaviour only if required.
-# ES_JAVA_OPTS: "-Xms2048m -Xmx2048m"
+ES_JAVA_OPTS: "-Xms1500m -Xmx1500m"

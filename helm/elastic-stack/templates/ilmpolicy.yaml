@@ -11,12 +11,7 @@ data:
         "policy": {
             "phases": {
                 "hot": {
-                "actions": {
-                    "rollover": {
-                    "max_primary_shard_size": "30gb",
-                    "max_age": "1d"
-                    }
-                }
+                "actions": {}
                 },
                 "warm": {
                 "min_age": "1d",
