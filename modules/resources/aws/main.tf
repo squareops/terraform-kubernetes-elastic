@@ -10,11 +10,11 @@ data "aws_caller_identity" "current" {
 }
 
 data "aws_eks_cluster" "kubernetes_cluster" {
-  name = var.cluster_name
+  name = var.eks_cluster_name
 }
 
 resource "aws_iam_role" "eck_role" {
-  name = join("-", [var.cluster_name, "elastic-system"])
+  name = join("-", [var.eks_cluster_name, "elastic-system"])
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -56,7 +56,7 @@ resource "aws_iam_role" "eck_role" {
 }
 
 resource "aws_iam_role" "filebeat_role" {
-  name = join("-", [var.cluster_name, "filebeat-role"])
+  name = join("-", [var.eks_cluster_name, "filebeat-role"])
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [

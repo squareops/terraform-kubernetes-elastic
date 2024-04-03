@@ -34,7 +34,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the EKS cluster to which the ECK stack should be deployed. | `string` | `"test"` | no |
+| <a name="input_eks_cluster_name"></a> [eks\_cluster\_name](#input\_eks\_cluster\_name) | Name of the EKS cluster to which the ECK stack should be deployed. | `string` | `"test"` | no |
 
 ## Outputs
 
