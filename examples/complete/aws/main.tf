@@ -10,7 +10,7 @@ locals {
 }
 
 module "aws" {
-  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
+  source           = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
   eks_cluster_name = "dev-cluster"
 }
 
