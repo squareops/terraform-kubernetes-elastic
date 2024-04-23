@@ -13,7 +13,7 @@ variable "eck_config" {
     data_hot_node_size   = "20Gi"
     data_warm_node_size  = "20Gi"
     eck_values           = ""
-    operator_values = ""
+    operator_values      = ""
     eckuser              = "elastic"
     eckpassword          = ""
     namespace            = "elastic-system"
@@ -35,7 +35,7 @@ variable "elastalert_config" {
   description = "Configurations for deploying the Elastalert tool, which is an alerting system for Elasticsearch."
 }
 
-variable "chart_version" {
+variable "helm_chart_version" {
   type        = string
   default     = "2.9.0"
   description = "Version of Helm chart to be used for deploying the ECK stack."
@@ -53,7 +53,7 @@ variable "exporter_enabled" {
 }
 
 
-variable "cluster_name" {
+variable "eks_cluster_name" {
   type        = string
   default     = ""
   description = "Name of the EKS cluster to which the ECK stack should be deployed."

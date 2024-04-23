@@ -1,6 +1,6 @@
 locals {
   name        = "elastic"
-  region      = "us-east-2"
+  region      = "ap-northeast-1"
   environment = "prod"
   additional_tags = {
     Owner      = "organization_name"
@@ -10,16 +10,16 @@ locals {
 }
 
 module "aws" {
-  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
-  cluster_name = ""
+  source           = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
+  eks_cluster_name = "dev-cluster"
 }
 
 module "eck" {
   source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  namespace = ""
+  namespace = local.name
   eck_config = {
     provider_type        = "aws"
-    hostname             = "eck.dev.skaf.xxxxxx"
+    hostname             = "eck.squareops.in"
     eck_values           = file("./helm/eck.yaml")
     operator_values      = file("./helm/operator.yaml")
     master_node_sc       = "gp2"
@@ -74,7 +74,7 @@ module "eck" {
   ingress_nginx_controller_enabled = true
   mongodb_enabled                  = true
   mysql_enabled                    = true
-  postgresql_enabled               = false
+  postgresql_enabled               = true
   filebeat_role_arn                = module.aws.filebeat_role_arn
   aws_cloudtrail_enabled           = true
   cloudtrail_bucket_arn            = ""

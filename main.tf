@@ -106,7 +106,7 @@ resource "helm_release" "elastalert" {
   name       = "elastalert"
   chart      = "elastalert2"
   timeout    = 600
-  version    = var.chart_version
+  version    = var.helm_chart_version
   namespace  = var.namespace
   repository = "https://jertel.github.io/elastalert2/"
   values = [
