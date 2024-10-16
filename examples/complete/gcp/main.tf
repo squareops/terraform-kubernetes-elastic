@@ -1,6 +1,6 @@
 locals {
   name        = "elastic"
-  region      = "us-east-2"
+  region      = ""
   environment = "prod"
   additional_tags = {
     Owner      = "organization_name"
@@ -10,7 +10,7 @@ locals {
 }
 
 module "eck" {
-  source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  source    = "../../../"
   namespace = "elastic-system"
   eck_config = {
     provider_type        = "gcp"

@@ -24,17 +24,18 @@ This module is compatible with EKS, AKS & GKE which is great news for users depl
 
 ```hcl
 module "aws" {
-  source = "https://github.com/sq-ia/terraform-kubernetes-elastic.git//modules/resources/aws"
-  cluster_name     = "prod-eks"
+  source = "https://github.com/squareops/terraform-kubernetes-elastic.git//modules/resources/aws"
+  cluster_name     = ""
 }
 
 module "eck" {
-  source       = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
-  namespace    = "elastic-system"
+  source       = "https://github.com/squareops/terraform-kubernetes-elastic.git"
+  namespace = ""
   eck_config = {
     provider_type        = "aws"
-    hostname             = "eck.squareops.in"
-    eck_values           = ""
+    hostname             = "eck.dev.skaf.xxxxxx"
+    eck_values           = file("./helm/eck.yaml")
+    operator_values      = file("./helm/operator.yaml")
     master_node_sc       = "gp2"
     data_hot_node_sc     = "gp2"
     data_warm_node_sc    = "gp2"
@@ -48,15 +49,15 @@ module "eck" {
     role_arn             = module.aws.role_arn
   }
   exporter_enabled   = true
-  elastalert_enabled = false
+  elastalert_enabled = true
   elastalert_config = {
     slack_webhook_url = ""
-    elastalert_values = ""
+    elastalert_values = file("./helm/elastAlert.yaml")
   }
-    # Multiple Indices
+  # Multiple Indices
   application_index_enabled       = true
   aws_index_enabled               = false
-  database_mysql_index_enabled    = false
+  database_mysql_index_enabled    = true
   database_mongodb_index_enabled  = false
   database_redis_index_enabled    = false
   database_rabbitmq_index_enabled = false
@@ -75,30 +76,33 @@ module "eck" {
   rabbitmq_input_type_value       = "rabbitmq"
   postgres_input_type_key         = "kubernetes.namespace"
   postgres_input_type_value       = "postgres"
+  custom_index_enabled            = true
+  custom_index_name               = "mongo"
+  custom_input_type_key           = "kubernetes.namespace"
+  custom_input_type_value         = "ingress-nginx"
   # Note: If you enabled "aws" index, you won't be able to visualize AWS modules kibana dashboards.
   aws_input_type_key   = "input.type"
   aws_input_type_value = "aws-s3"
   # Filebeat Modules
+  aws_modules_enabled              = true
   ingress_nginx_controller_enabled = true
   mongodb_enabled                  = true
   mysql_enabled                    = true
   postgresql_enabled               = false
   filebeat_role_arn                = module.aws.filebeat_role_arn
-  aws_cloudtrail_enabled           = false
-  cloudtrail_bucket_arn            = "arn:s3::xxxxxxx"
-  cloudtrail_bucket_prefix         = "logs/"
+  aws_cloudtrail_enabled           = true
+  cloudtrail_bucket_arn            = ""
+  cloudtrail_bucket_prefix         = ""
   aws_elb_enabled                  = false
-  elb_bucket_arn                   = "arn:s3::xxxxxxx"
-  elb_bucket_prefix                = "access-logs/"
-  aws_vpc_flow_logs_enabled        = false
-  vpc_flowlogs_bucket_arn          = "arn:s3::xxxxxxx"
-  vpc_flowlogs_bucket_prefix       = "vpc-logs/"
-  aws_s3access_enabled             = false
-  s3access_bucket_arn              = "arn:s3::xxxxxxx"
-  s3access_bucket_prefix           = "s3-access/"
+  elb_bucket_arn                   = ""
+  elb_bucket_prefix                = ""
+  aws_vpc_flow_logs_enabled        = true
+  vpc_flowlogs_bucket_arn          = ""
+  vpc_flowlogs_bucket_prefix       = ""
+  aws_s3access_enabled             = true
+  s3access_bucket_arn              = ""
+  s3access_bucket_prefix           = ""
 }
-
-
 ```
 - Refer [AWS examples](https://github.com/sq-ia/terraform-kubernetes-elastic/tree/main/examples/complete/aws) for more details.
 - Refer [Azure examples](https://github.com/sq-ia/terraform-kubernetes-elastic/tree/main/examples/complete/azure) for more details.
