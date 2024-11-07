@@ -24,12 +24,13 @@ This module is compatible with EKS, AKS & GKE which is great news for users depl
 
 ```hcl
 module "aws" {
-  source = "https://github.com/squareops/terraform-kubernetes-elastic.git//modules/resources/aws"
+  source = "squareops/elastic/kubernetes//modules/resources/aws"
   cluster_name     = ""
 }
 
 module "eck" {
-  source       = "https://github.com/squareops/terraform-kubernetes-elastic.git"
+  source       = "squareops/elastic/kubernetes"
+  version      = "3.4.2"
   namespace = ""
   eck_config = {
     provider_type        = "aws"

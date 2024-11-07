@@ -10,7 +10,8 @@ locals {
 }
 
 module "eck" {
-  source    = "../../../"
+  source    = "squareops/elastic/kubernetes"
+  version   = "3.4.2"
   namespace = "elastic-system"
   eck_config = {
     provider_type        = "gcp"

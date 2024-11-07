@@ -22,8 +22,8 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aws"></a> [aws](#module\_aws) | https://github.com/squareops/terraform-kubernetes-elastic.git//modules/resources/aws | n/a |
-| <a name="module_eck"></a> [eck](#module\_eck) | https://github.com/squareops/terraform-kubernetes-elastic.git | n/a |
+| <a name="module_aws"></a> [aws](#module\_aws) | squareops/elastic/kubernetes//modules/resources/aws | n/a |
+| <a name="module_eck"></a> [eck](#module\_eck) | squareops/elastic/kubernetes | n/a |
 
 ## Resources
 

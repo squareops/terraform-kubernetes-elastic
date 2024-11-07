@@ -15,7 +15,8 @@ module "aws" {
 }
 
 module "eck" {
-  source    = "../../../"
+  source    = "squareops/elastic/kubernetes"
+  version   = "3.4.2"
   namespace = ""
   eck_config = {
     provider_type        = "aws"
