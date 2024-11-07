@@ -10,7 +10,7 @@ locals {
 }
 
 module "aws" {
-  source       = "../../..//modules/resources/aws"
+  source       = "squareops/elastic/kubernetes//modules/resources/aws"
   cluster_name = ""
 }
 
