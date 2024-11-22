@@ -1,6 +1,6 @@
 locals {
   name        = "elastic"
-  region      = "eastus"
+  region      = ""
   environment = "prod"
   additional_tags = {
     Owner      = "organization_name"
@@ -10,7 +10,8 @@ locals {
 }
 
 module "eck" {
-  source    = "https://github.com/sq-ia/terraform-kubernetes-elastic.git"
+  source    = "squareops/elastic/kubernetes"
+  version   = "3.4.2"
   namespace = "elastic-system"
   eck_config = {
     provider_type        = "azure"
